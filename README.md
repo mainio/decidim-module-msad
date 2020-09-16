@@ -1,7 +1,7 @@
 # Decidim::Msad - Integrate Decidim to Microsoft Active Directory (AD)
 
 [![Build Status](https://travis-ci.com/mainio/decidim-module-msad.svg?branch=master)](https://travis-ci.com/mainio/decidim-module-msad)
-[![codecov](https://codecov.io/gh/mainio/decidim-module-ad/branch/master/graph/badge.svg)](https://codecov.io/gh/mainio/decidim-module-msad)
+[![codecov](https://codecov.io/gh/mainio/decidim-module-msad/branch/master/graph/badge.svg)](https://codecov.io/gh/mainio/decidim-module-msad)
 
 A [Decidim](https://github.com/decidim/decidim) module to add Microsoft Active
 Directory (AD) authentication to Decidim as a way to authenticate and authorize
