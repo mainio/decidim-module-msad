@@ -1,0 +1,70 @@
+<samlp:Response Destination="https://1.lvh.me/users/auth/msad/callback"
+    ID="_78a90123-123b-45cd-abcd-e12345f678gh" InResponseTo="_123456ab-1234-1a2b-cd3e-1a2b34567890"
+    IssueInstant="2020-09-02T06:03:48.653Z" Version="2.0"
+    xmlns:samlp="urn:oasis:names:tc:SAML:2.0:protocol">
+    <Issuer xmlns="urn:oasis:names:tc:SAML:2.0:assertion">https://sts.windows.net/987f6543-1e0d-12a3-45b6-789012c345de/</Issuer>
+    <samlp:Status><samlp:StatusCode Value="urn:oasis:names:tc:SAML:2.0:status:Success"/></samlp:Status>
+    <Assertion ID="_111a1aaa-1111-11a1-a111-11a111111a11" IssueInstant="2020-09-02T06:03:48.648Z"
+        Version="2.0" xmlns="urn:oasis:names:tc:SAML:2.0:assertion" xmlns:samlp="urn:oasis:names:tc:SAML:2.0:protocol">
+        <Issuer>https://sts.windows.net/987f6543-1e0d-12a3-45b6-789012c345de/</Issuer><ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#"><ds:SignedInfo><ds:CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/><ds:SignatureMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha256"/><ds:Reference URI="#_111a1aaa-1111-11a1-a111-11a111111a11"><ds:Transforms><ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/><ds:Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"><ec:InclusiveNamespaces xmlns:ec="http://www.w3.org/2001/10/xml-exc-c14n#" PrefixList="#default samlp saml ds xs xsi md"/></ds:Transform></ds:Transforms><ds:DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/><ds:DigestValue>J77pF95LL771vDNIYhbvP7LsmwORabRSiBmdXVRtdg0=</ds:DigestValue></ds:Reference></ds:SignedInfo><ds:SignatureValue>RVQ6R3sZPQJUCh5aBxBptuxy1EBUeIPzDCjLv/Z5m/nAb02c8IitkKuaJUXhICX1cUmfQtcr2rFyMo3xu3MXGXSgtcob8ZmJ6o2pK2IW735/ZVCMsX2cLLndV72jhBzCAlfLgApzmJGOYPQJ+PUcxGpbWXbCi6SIy5wciorV3YbjxD+HQin+hswkAx5de/uc7ySo33NTBFyVyfZZByif3fTScTojHc1P38n4c08bsJ6h3mql5Ova+HmuEtDe4gkSUtqr8tSpSAyZXH+5l6J91fTWYSNKAMG+610S6Ic/vs9UkD3JWJTL/1Gt9PiwCsDNtv0SRvn/ZdPoj6BCZ0hLnuDaYy3w7e8qCwuD5OgjvOKZ39Wy8or597kV3rKGNSqkFSes0bQHLblcq/k5iCSYMJig30V91zGJJG83UxrKkrcce6uHH5vHqts2ZFukT+nQGVFzyIaX/BIgSbMaDCP6ZFgQffE4WEfE5WZdYZVjEygbzsyMILlTOGFiQxpaAzfYxsFqb1fDK/1BaK/Qa7NglaK11vyArr2R7Y8+m0dSsRCjyau9S8sJyuuHWDgkE+QedrYIfltgPyRA9BZnzIEVch/sQkJ/6lEw+3iL1UKTalAY6gZhuCdPNQ5QYaSVsnTZWKjA3NYZePY+A6sDHg3lQrnEnpnIb5QMXHbY2IUIlqs=</ds:SignatureValue><ds:KeyInfo><ds:X509Data><ds:X509Certificate>MIIFbTCCA1UCFDasTBnVlHZt8roQX1dXyt3IV+7UMA0GCSqGSIb3DQEBCwUAMHIxCzAJBgNVBAYTAkZJMRAwDgYDVQQIDAdVdXNpbWFhMREwDwYDVQQHDAhIZWxzaW5raTEXMBUGA1UECgwOTWFpbmlvIFRlY2ggT3kxCzAJBgNVBAsMAklUMRgwFgYDVQQDDA93d3cuZXhhbXBsZS5vcmcwIBcNMjAwOTE0MDY1NDQ4WhgPMjEyMDA4MjEwNjU0NDhaMHIxCzAJBgNVBAYTAkZJMRAwDgYDVQQIDAdVdXNpbWFhMREwDwYDVQQHDAhIZWxzaW5raTEXMBUGA1UECgwOTWFpbmlvIFRlY2ggT3kxCzAJBgNVBAsMAklUMRgwFgYDVQQDDA93d3cuZXhhbXBsZS5vcmcwggIiMA0GCSqGSIb3DQEBAQUAA4ICDwAwggIKAoICAQDCHzdCVJCkLR/EnG0Ag++FGYXHrhCUZHOFOQFNQuWUns3Vh2uuUnVXrReQaumsilN+TfJp3eOq7pfbiwviyAthkNWshTG+53WGVazieM8LKO9LFpkRgsayI91qd7zNtSyqdoH58ok5q0S9aRpfbPsH0NmbJdkH4wmiMo6+2knHkoNYFl0wCgVuKlJScnQO0gWetdVsguFl3Eh8DS7Wp+iTamN9GYbcUYhnVzoK5Z9E4zgcKXzJTGQ0Gw9nxmx4L/vDPB7KM0ZjyrAZ0c8dLf40sFTBKmdsH/LL/ZzKh7m2H8+tNFQrGni6vGf1UhaVt1xFrMzFw5LzHCw+26YtOL1Mp004fRNWWVIvjw7uHCBFSygZBHWLesCO3qzhIytY0hjSObVkkclIU3Yegtr20HIWgpJVFjIn7Id1Fwdd9R8urbMvjVS7M5x5nhc7pRyKre35S3CgLBeVTQNbgfPzP/bArwc+YiU7KtaK/dsy0o2KA/fWTVIIPsdFztx5gBHNKHmEOGbnzMMWQMHupL69ttjjRm4oYet78ddgunUUwiax8QKs9r6gysrXCyJGphgiKEGJb0XsX5qOFxErdL8rLZg05DzvPo03KhbH9dzeJd2h+i0mfvybMChktGiozcdthUoe5f/Gxstmp+QuaJ5j3hfubfHwcafBeNxx56JmHcrz0QIDAQABMA0GCSqGSIb3DQEBCwUAA4ICAQB2bS3XnpEzvFbHN6yy+UVmtmyPP4oESbOrHAJCg0r4qYimjOXy/5wWo+pPuBxE3C2oihmDtExxTcqXrd5xBawRzTA11zbDUHFYtZX/kV3HlaEbaT4srSPqp4C8hrblbxD6384P6KIi1H3wI9HFCwv8NxckZ+tfbWvv5xibRi6mpn1qJY+VrcpilDAfEtQ9kV2WaGU3jwQdGKpf7UnrpdLYHLzT7fPkBMoRqrdWQ8x71MNJb2iTxVgdJ1Oj7ywVuOVMghbhRNaS/Nd9tiy7HeQ/NN5O2o/HspFDy/VXiYJRLSKmQRMUR3w6iFV6Q1NykgICmvBCu7mhqzBx4O0gMlwLu+huyP1hM4DsKa9A7Tgxq85t9aqBcJnL9n1dOz1VwWI1FTY13IWqqguwqh/6gHjwJaR+N52SOSswb4Pc1k7XEaYjq9VX0ScfPW6WENhDCcbF26gfcuIwJfML+ha/N0dbiu6ST7Wq8TV1LSonDClR7G1rGZ+5uqfzzF6M7gN+DeJEE6VAYBsuUr1XhuaI+nzHwyRZ8PRO/bOZLBWFPISsOZ+y0B50DrFBL9EddcnPFe7Cm5a5OVPgpzLqOD+DYQopkENyxEgUzGndm5INQm93N7rfN6CYhLTe0H4qCKE3f4cSZtR7HZ6vmeE3ags7HVPjQH11n84Agm1kXDfw5BG1+A==</ds:X509Certificate></ds:X509Data></ds:KeyInfo></ds:Signature>
+        <Subject>
+            <NameID Format="urn:oasis:names:tc:SAML:1.1:nameid-format:persistent">mmeikalainen.onmicrosoft.com#EXT#@example.onmicrosoft.com</NameID>
+            <SubjectConfirmation Method="urn:oasis:names:tc:SAML:2.0:cm:bearer">
+                <SubjectConfirmationData InResponseTo="_123456ab-1234-1a2b-cd3e-1a2b34567890" NotOnOrAfter="2020-09-02T07:03:48.223Z" Recipient="https://1.lvh.me/users/auth/msad/callback"/>
+            </SubjectConfirmation>
+        </Subject>
+        <Conditions NotBefore="2020-09-02T05:58:48.223Z" NotOnOrAfter="2020-09-02T07:03:48.223Z">
+            <AudienceRestriction>
+                <Audience>https://1.lvh.me/users/auth/msad/metadata</Audience>
+            </AudienceRestriction>
+        </Conditions>
+        <AttributeStatement>
+            <Attribute Name="http://schemas.microsoft.com/identity/claims/tenantid">
+                <AttributeValue>999a8888-1a2b-11a1-11a1-111111a111ab</AttributeValue>
+            </Attribute>
+            <Attribute Name="http://schemas.microsoft.com/identity/claims/objectidentifier">
+                <AttributeValue>555abcd5-a555-5a55-a5aa-a55555a555aa</AttributeValue>
+            </Attribute>
+            <Attribute Name="http://schemas.microsoft.com/identity/claims/displayname">
+                <AttributeValue>mmeikalainen</AttributeValue>
+            </Attribute>
+            <Attribute Name="http://schemas.microsoft.com/identity/claims/identityprovider">
+                <AttributeValue>live.com</AttributeValue>
+            </Attribute>
+            <Attribute Name="http://schemas.microsoft.com/claims/authnmethodsreferences">
+                <AttributeValue>http://schemas.microsoft.com/ws/2008/06/identity/authenticationmethod/password</AttributeValue>
+                <AttributeValue>http://schemas.microsoft.com/ws/2008/06/identity/authenticationmethod/unspecified</AttributeValue>
+            </Attribute>
+            <Attribute Name="http://schemas.xmlsoap.org/ws/2005/05/identity/claims/givenname">
+                <AttributeValue>Matti</AttributeValue>
+            </Attribute>
+            <Attribute Name="http://schemas.xmlsoap.org/ws/2005/05/identity/claims/surname">
+                <AttributeValue>Meikalainen</AttributeValue>
+            </Attribute>
+            <Attribute Name="http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress">
+                <AttributeValue>matti.meikalainen@example.org</AttributeValue>
+            </Attribute>
+            <Attribute Name="http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name">
+                <AttributeValue>mmeikalainen.onmicrosoft.com#EXT#@example.onmicrosoft.com</AttributeValue>
+            </Attribute>
+            <Attribute Name="Department">
+                <AttributeValue>Lauttasaari</AttributeValue>
+            </Attribute>
+            <Attribute Name="PostalCode">
+                <AttributeValue>00210</AttributeValue>
+            </Attribute>
+            <Attribute Name="DisplayName">
+                <AttributeValue>mmeikalainen</AttributeValue>
+            </Attribute>
+            <Attribute Name="EmployeeID">
+                <AttributeValue>ABC123</AttributeValue>
+            </Attribute>
+        </AttributeStatement>
+        <AuthnStatement AuthnInstant="2020-09-02T06:03:48.223Z"
+            SessionIndex="_111a1aaa-1111-11a1-a111-11a111111a11">
+            <AuthnContext>
+                <AuthnContextClassRef>urn:oasis:names:tc:SAML:2.0:ac:classes:Password</AuthnContextClassRef>
+            </AuthnContext>
+        </AuthnStatement>
+    </Assertion>
+</samlp:Response>

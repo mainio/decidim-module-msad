@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<samlp:AuthnRequest AssertionConsumerServiceURL='https://1.lvh.me/users/auth/msad/callback'
+    Destination='https://login.microsoftonline.com/123a4567-1a2b-34c5-67d8-123456a789bc/saml2'
+    ID='_123456ab-1234-1a2b-cd3e-1a2b34567890' IssueInstant='2020-09-02T06:02:07Z' Version='2.0'
+    xmlns:saml='urn:oasis:names:tc:SAML:2.0:assertion'
+    xmlns:samlp='urn:oasis:names:tc:SAML:2.0:protocol'>
+    <saml:Issuer>https://localhost:3000/users/auth/msad/metadata</saml:Issuer>
+</samlp:AuthnRequest>

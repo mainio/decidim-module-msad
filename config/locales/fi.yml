@@ -1,0 +1,26 @@
+fi:
+  decidim:
+    authorization_handlers:
+      msad_identity:
+        explanation: Tunnista itsesi Active Directory -tunnistuspalvelun avulla.
+        name: Active Directory tunnistus
+    msad:
+      omniauth_callbacks:
+        failure:
+          already_authorized: Toinen käyttäjä on tunnistanut itsensä jo samalla henkilöllisyydellä.
+          conditions: Tunnistuspyyntöä ei käsitelty sallitun aikarajan sisällä. Yritä uudestaan.
+          identity_bound_to_other_user: Toinen käyttäjä on jo tunnistanut itsensä tällä henkilöllisyydellä. Kirjaudu ulos ja kirjaudu uudestaan sisään käyttäen suoraan Active Directory -tunnistusta.
+          invalid_data: Sinua ei voida tunnistaa Active Directoryn kautta.
+          session_expiration: Tunnistusistunto vanhentui. Yritä uudestaan.
+          success_status: Tunnistus epäonnistui tai peruutettiin. Yritä uudestaan.
+      verification:
+        authorizations:
+          create:
+            success: Sinut on onnistuneesti tunnistettu Active Directory -palvelun avulla
+          destroy:
+            success: Varmennus tyhjennetty onnistuneesti.
+    system:
+      organizations:
+        omniauth_settings:
+          msad:
+            metadata_url: Metadatan osoite (URL)

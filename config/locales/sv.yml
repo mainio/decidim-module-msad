@@ -1,0 +1,26 @@
+sv:
+  decidim:
+    authorization_handlers:
+      msad_identity:
+        explanation: Identifiera dig själv med Active Directory -identifikation.
+        name: Active Directory -identifikation
+    msad:
+      omniauth_callbacks:
+        failure:
+          already_authorized: En annan användare har redan godkänt sig med samma identitet.
+          conditions: Autentiseringsbegäran hanterades inte inom en tillåten tidsram. Var god försök igen.
+          identity_bound_to_other_user: En annan användare har redan identifierats med denna identitet. Logga ut och logga in igen direkt med Active Directory.
+          invalid_data: Du kan inte verifieras via Active Directory.
+          session_expiration: Autentiseringssessionen har gått ut. Var god försök igen.
+          success_status: Autentiseringen misslyckades eller avbröts. Var god försök igen.
+      verification:
+        authorizations:
+          create:
+            success: Du har godkänts med Active Directory
+          destroy:
+            success: Tillståndet återställs efterhand.
+    system:
+      organizations:
+        omniauth_settings:
+          msad:
+            metadata_url: Metadata URL

@@ -1,0 +1,64 @@
+# frozen_string_literal: true
+
+Decidim::Msad.configure do |config|
+  # Define the IdP metadata URL through the secrets
+  config.idp_metadata_url = Rails.application.secrets.omniauth[:msad][:metadata_url]
+
+  # Define the service provider entity ID:
+  # config.sp_entity_id = "https://www.example.org/users/auth/msad/metadata"
+  # Or define it in your application configuration and apply it here:
+  # config.sp_entity_id = Rails.application.config.msad_entity_id
+  # Enable automatically assigned emails
+  config.auto_email_domain = "example.org"
+
+  # Configure the SAML attributes that will be stored in the user's
+  # authorization metadata.
+  # config.metadata_attributes = {
+  #   display_name: "http://schemas.microsoft.com/identity/claims/displayname",
+  #   given_name: "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/givenname",
+  #   surname: "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/surname",
+  #   birthday: "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/dateofbirth",
+  #   postal_code: "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/postalcode",
+  #   mobile_phone: "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/mobilephone",
+  #   groups: { name: "http://schemas.microsoft.com/ws/2008/06/identity/claims/groups", type: :multi }
+  # }
+
+  # You can define extra service provider metadata that will show up in the
+  # metadata URL.
+  # config.sp_metadata = [
+  #   {
+  #     name: "Organization",
+  #     children: [
+  #       {
+  #         name: "OrganizationName",
+  #         attributes: { "xml:lang" => "en-US" },
+  #         content: "Acme"
+  #       },
+  #       {
+  #         name: "OrganizationDisplayName",
+  #         attributes: { "xml:lang" => "en-US" },
+  #         content: "Acme Corporation"
+  #       },
+  #       {
+  #         name: "OrganizationURL",
+  #         attributes: { "xml:lang" => "en-US" },
+  #         content: "https://en.wikipedia.org/wiki/Acme_Corporation"
+  #       }
+  #     ]
+  #   },
+  #   {
+  #     name: "ContactPerson",
+  #     attributes: { "contactType" => "technical" },
+  #     children: [
+  #       {
+  #         name: "GivenName",
+  #         content: "John Doe"
+  #       },
+  #       {
+  #         name: "EmailAddress",
+  #         content: "jdoe@acme.org"
+  #       }
+  #     ]
+  #   }
+  # ]
+end

@@ -1,0 +1,27 @@
+---
+en:
+  decidim:
+    authorization_handlers:
+      msad_identity:
+        explanation: Identify yourself using the Active Directory identity service.
+        name: Active Directory identity
+    msad:
+      omniauth_callbacks:
+        failure:
+          already_authorized: Another user has already authorized themselves with the same identity.
+          conditions: The authentication request was not handled within an allowed timeframe. Please try again.
+          identity_bound_to_other_user: Another user has already been identified using this identity. Please sign out and sign in again directly using Active Directory.
+          invalid_data: You cannot be authenticated through Active Directory.
+          session_expiration: Authentication session expired. Please try again.
+          success_status: Authentication failed or cancelled. Please try again.
+      verification:
+        authorizations:
+          create:
+            success: You have been successfully authorized through Active Directory
+          destroy:
+            success: Authorization sucessfully reset.
+    system:
+      organizations:
+        omniauth_settings:
+          msad:
+            metadata_url: Metadata URL

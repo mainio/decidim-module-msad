@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<samlp:LogoutResponse
+  Destination="http://1.lvh.me/users/auth/msad/slo"
+  ID="_916be58fd332fb8a47ca8783fd1c116b"
+  InResponseTo="_123456ab-1234-1a2b-cd3e-1a2b34567890"
+  IssueInstant="2020-09-02T15:26:32.352Z"
+  Version="2.0"
+  xmlns:samlp="urn:oasis:names:tc:SAML:2.0:protocol">
+  <saml:Issuer xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion">https://sts.windows.net/987f6543-1e0d-12a3-45b6-789012c345de/</saml:Issuer>
+  <samlp:Status xmlns:samlp="urn:oasis:names:tc:SAML:2.0:protocol">
+    <samlp:StatusCode xmlns:samlp="urn:oasis:names:tc:SAML:2.0:protocol" Value="urn:oasis:names:tc:SAML:2.0:status:Success" />
+    <samlp:StatusMessage xmlns:samlp="urn:oasis:names:tc:SAML:2.0:protocol">Successfully logged out from service</samlp:StatusMessage>
+  </samlp:Status>
+</samlp:LogoutResponse>
