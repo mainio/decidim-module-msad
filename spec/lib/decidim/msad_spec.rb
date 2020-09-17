@@ -139,7 +139,7 @@ module Decidim
         end
 
         context "and mailer configuration having a host" do
-          let(:mailer_defaults) { { host: "https://www.example.org" } }
+          let(:mailer_defaults) { { host: "www.example.org" } }
 
           it "returns the mailer config host" do
             expect(subject.application_host).to eq("https://www.example.org")
@@ -147,7 +147,7 @@ module Decidim
         end
 
         context "and mailer configuration having a host and a port" do
-          let(:mailer_defaults) { { host: "https://www.example.org", port: 4443 } }
+          let(:mailer_defaults) { { host: "www.example.org", port: 4443 } }
 
           it "returns the mailer config host and port" do
             expect(subject.application_host).to eq("https://www.example.org:4443")
@@ -156,8 +156,8 @@ module Decidim
       end
 
       context "with controller config having a host" do
-        let(:controller_defaults) { { host: "https://www.example.org" } }
-        let(:mailer_defaults) { { host: "https://www.mailer.org", port: 4443 } }
+        let(:controller_defaults) { { host: "www.example.org" } }
+        let(:mailer_defaults) { { host: "www.mailer.org", port: 4443 } }
 
         it "returns the controller config host" do
           expect(subject.application_host).to eq("https://www.example.org")
@@ -165,15 +165,15 @@ module Decidim
       end
 
       context "with controller config having a host and a port" do
-        let(:controller_defaults) { { host: "https://www.example.org", port: 8080 } }
-        let(:mailer_defaults) { { host: "https://www.mailer.org", port: 4443 } }
+        let(:controller_defaults) { { host: "www.example.org", port: 8080 } }
+        let(:mailer_defaults) { { host: "www.mailer.org", port: 4443 } }
 
         it "returns the controller config host and port" do
           expect(subject.application_host).to eq("https://www.example.org:8080")
         end
 
         context "when the port is 80" do
-          let(:controller_defaults) { { host: "http://www.example.org", port: 80 } }
+          let(:controller_defaults) { { host: "www.example.org", port: 80 } }
 
           it "does not append it to the host" do
             expect(subject.application_host).to eq("http://www.example.org")
@@ -181,7 +181,7 @@ module Decidim
         end
 
         context "when the port is 443" do
-          let(:controller_defaults) { { host: "https://www.example.org", port: 443 } }
+          let(:controller_defaults) { { host: "www.example.org", port: 443 } }
 
           it "does not append it to the host" do
             expect(subject.application_host).to eq("https://www.example.org")
@@ -190,7 +190,7 @@ module Decidim
       end
 
       context "with mailer config having a host" do
-        let(:mailer_defaults) { { host: "https://www.example.org" } }
+        let(:mailer_defaults) { { host: "www.example.org" } }
 
         it "returns the mailer config host" do
           expect(subject.application_host).to eq("https://www.example.org")
@@ -198,14 +198,14 @@ module Decidim
       end
 
       context "with mailer config having a host and a port" do
-        let(:mailer_defaults) { { host: "https://www.example.org", port: 8080 } }
+        let(:mailer_defaults) { { host: "www.example.org", port: 8080 } }
 
         it "returns the mailer config host and port" do
           expect(subject.application_host).to eq("https://www.example.org:8080")
         end
 
         context "when the port is 80" do
-          let(:mailer_defaults) { { host: "http://www.example.org", port: 80 } }
+          let(:mailer_defaults) { { host: "www.example.org", port: 80 } }
 
           it "does not append it to the host" do
             expect(subject.application_host).to eq("http://www.example.org")
@@ -213,7 +213,7 @@ module Decidim
         end
 
         context "when the port is 443" do
-          let(:mailer_defaults) { { host: "https://www.example.org", port: 443 } }
+          let(:mailer_defaults) { { host: "www.example.org", port: 443 } }
 
           it "does not append it to the host" do
             expect(subject.application_host).to eq("https://www.example.org")

@@ -169,18 +169,21 @@ module Decidim
       url_options = conf.action_mailer.default_url_options if !url_options || !url_options[:host]
       url_options ||= {}
 
+      # Note that at least Azure AD requires all callback URLs to be HTTPS, so
+      # we'll default to that.
       host = url_options[:host]
       port = url_options[:port]
+      protocol = url_options[:protocol]
+      protocol = port.to_i == 80 ? "http" : "https" if protocol.blank?
       if host.blank?
-        # Default to local development environment. At least Azure AD requires
-        # all callback URLs to be HTTPS, so we'll default to that.
-        host = "https://localhost"
+        # Default to local development environment.
+        host = "localhost"
         port ||= 3000
       end
 
-      return "#{host}:#{port}" if port && ![80, 443].include?(port.to_i)
+      return "#{protocol}://#{host}:#{port}" if port && ![80, 443].include?(port.to_i)
 
-      host
+      "#{protocol}://#{host}"
     end
   end
 end
