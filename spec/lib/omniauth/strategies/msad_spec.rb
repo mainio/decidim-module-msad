@@ -410,12 +410,17 @@ module OmniAuth
           end
         end
 
-        before do
+        it "adds the correct request attributes" do
           expect(subject).to be_successful
+          expect(request_attributes).to match_array([])
         end
 
-        it "adds the correct request attributes" do
-          expect(request_attributes).to match_array([])
+        context "when IdP metadata URL is not available" do
+          let(:idp_metadata_url) { nil }
+
+          it "responds to the metadata request" do
+            expect(subject).to be_successful
+          end
         end
       end
     end
