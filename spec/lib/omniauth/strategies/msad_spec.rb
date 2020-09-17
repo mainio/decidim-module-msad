@@ -102,6 +102,26 @@ module OmniAuth
             idp_cert.gsub(/-----[^\-]+-----/, "").gsub("\n", "")
           )
         end
+
+        context "when the name identifier format is specified" do
+          let(:saml_options) do
+            {
+              idp_metadata_url: idp_metadata_url,
+              sp_entity_id: sp_entity_id,
+              name_identifier_format: "urn:oasis:names:tc:SAML:2.0:nameid-format:transient"
+            }
+          end
+
+          it "uses the configured name identifier format" do
+            expect(subject).to be_successful
+
+            instance = last_request.env["omniauth.strategy"]
+
+            expect(instance.options[:name_identifier_format]).to eq(
+              "urn:oasis:names:tc:SAML:2.0:nameid-format:transient"
+            )
+          end
+        end
       end
 
       describe "GET /users/auth/msad" do

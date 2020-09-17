@@ -118,9 +118,16 @@ module OmniAuth
         # logout requests.
         settings[:idp_name_qualifier] = settings[:idp_entity_id]
 
-        # If the name identifier format is not defined in the IdP metadata, add
-        # the persistent format to the SP metadata.
-        settings[:name_identifier_format] ||= "urn:oasis:names:tc:SAML:2.0:nameid-format:persistent"
+        if !options.name_identifier_format.blank?
+          # If the name identifier format has been configured, use that instead
+          # of the IdP metadata value. Otherwise the first format available in
+          # the IdP metadata would be used.
+          settings[:name_identifier_format] = options.name_identifier_format
+        elsif settings[:name_identifier_format].blank?
+          # If the name identifier format is not defined in the IdP metadata,
+          # add the persistent format to the SP metadata.
+          settings[:name_identifier_format] = "urn:oasis:names:tc:SAML:2.0:nameid-format:persistent"
+        end
 
         settings
       end
