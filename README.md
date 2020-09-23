@@ -2,6 +2,7 @@
 
 [![Build Status](https://travis-ci.com/mainio/decidim-module-msad.svg?branch=master)](https://travis-ci.com/mainio/decidim-module-msad)
 [![codecov](https://codecov.io/gh/mainio/decidim-module-msad/branch/master/graph/badge.svg)](https://codecov.io/gh/mainio/decidim-module-msad)
+[![Crowdin](https://badges.crowdin.net/decidim-msad/localized.svg)](https://crowdin.com/project/decidim-msad)
 
 A [Decidim](https://github.com/decidim/decidim) module to add Microsoft Active
 Directory (AD) authentication to Decidim as a way to authenticate and authorize
