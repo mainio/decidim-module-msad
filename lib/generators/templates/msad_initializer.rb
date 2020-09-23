@@ -11,6 +11,16 @@ Decidim::Msad.configure do |config|
   # Enable automatically assigned emails
   config.auto_email_domain = "example.org"
 
+  # Subscribe new users automatically to newsletters (default false).
+  #
+  # IMPORANT NOTE:
+  # Legally it should be always a user's own decision if the want to subscribe
+  # to any newsletters or not. Before enabling this, make sure you have your
+  # legal basis covered for enabling it. E.g. for internal instances within
+  # organizations, it should be generally acceptable but please confirm that
+  # from the legal department first!
+  # config.registration_newsletter_subscriptions = true
+
   # Configure the SAML attributes that will be stored in the user's
   # authorization metadata.
   # config.metadata_attributes = {
