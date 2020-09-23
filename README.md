@@ -113,16 +113,260 @@ authentication button from the Decidim's own iconset. In case you want to have a
 better and more formal styling for the sign in button, you will need to
 customize the sign in / sign up views.
 
+## Configuring the federation server
+
+For configuring the federation server, you will need to send the AD federation
+server administrator some data from the Decidim's side. After installing the
+module and configuring your entity ID, possible SP certificate and any additonal
+SP metadata you want to send, you can send the federation side's administrator
+the following URL to your instance in order for them to get the necessary data
+for joining the system at their side:
+
+https://your-organization.org/users/auth/msad/metadata
+
+Change the domain accordingly to your instance and make sure you see an XML file
+in that URL when you request it. This is the SAML metadata you will need to send
+to the other side.
+
+After the other side is configured, you can start using the integration at
+Decidim's side. If you already know the AD federation server's metadata URL in
+advance, you can already configure it at this point but obviously the sign ins
+won't work until the federation server is configured correctly. The metadata
+URLs for the federation servers (either Azure AD or ADFS) should look as
+follows:
+
+- **Azure AD**: https://login.microsoftonline.com/123a4567-8b90-12a3-45b6-789012a345bc/federationmetadata/2007-06/federationmetadata.xml?appid=ab1c2d3e-45fa-123b-4cd5-e678fabc90d1
+- **ADFS**: https://adfs.your-organization.org/FederationMetadata/2007-06/FederationMetadata.xml
+
+You can configure this URL to the module's `:idp_metadata_url` configuration as
+explained previously in this document. Before giving it a try, you of course
+need to configure the federation side to handle your requests.
+
+If you don't know the metadata URL, please ask it from the federation server
+administrator after you have sent your service provider (SP) metadata to them.
+
+### Configuring Azure AD
+
+To configure Azure AD, follow these steps:
+
+1. Go to your Decidim instance's metadata URL (explained previously in this
+   document) and save the metadata XML to a file with the `.xml` extension on
+   your computer.
+2. In Azure, may be obvious but deploy the Azure AD instance if you haven't done
+   so yet.
+3. Under the Azure Active Directory, go to "Enterprise Applications".
+4. Click "+ New application" and from the top of the view that opens, click
+   "+ Create your own application".
+5. Give the name of your app based on your application's name, e.g.
+   "Your Organization Decidim" and leave the "Integrate any other application
+   you don't find in the gallery" option selected.
+6. Go to the "Single sign-on" tab and select "SAML" as the Select a single
+   sign-on method.
+7. From the top of the view, click "Upload metadata" and pick the Decidim
+   instance's metadata XML file you saved in the beginning. Some of the required
+   properties should be automatically filled but for those fields that are not,
+   define the following (optional):
+   * Sign on URL: https://your-organization.org/users/auth/msad
+   * Relay State: https://your-organization.org/
+8. Click "Save" and wait for the configurations to update.
+9. Click "Edit" under the "User Attributes & Claims" section and define the
+   attributes shown in the table below. Leave the "Unique User Identifier
+   (Name ID)" claim untouched unless you know what you are doing.
+10. Once done with the claims, copy the "App Federation Metadata Url" from the
+    "SAML Signing Certificate" section of the Single sign-on view and configure
+    it to the Decidim module's `:idp_metadata_url` configuration of your Decidim
+    instance as explained in this document. If you don't see the metadata URL
+    in this section, wait for a moment for the application to deploy at Azure.
+12. After the single sign-on configuration, decide if you want to assign users
+    manually to this application or let every user sign in to the application.
+    If you want to provide access to all users in your Azure AD, go to the
+    "Properties" tab of your Enterprise Application and change the "User
+    assignment required?" configuration to "No".
+13.  Test that the integration is working correctly.
+
+These are the attributes you will need to configure for the "User Attributes &
+Claims" section (some of these should be already pre-defined by Azure):
+
+| Name         | NameSpace                                              | Source    | Source attribute       |
+| ------------ | ------------------------------------------------------ | --------- | ---------------------- |
+| emailaddress | http​://schemas.xmlsoap.org/ws/2005/05/identity/claims  | Attribute | user.mail              |
+| name         | http​://schemas.xmlsoap.org/ws/2005/05/identity/claims  | Attribute | user.userprincipalname |
+| givenname    | http​://schemas.xmlsoap.org/ws/2005/05/identity/claims  | Attribute | user.givenname         |
+| surname      | http​://schemas.xmlsoap.org/ws/2005/05/identity/claims  | Attribute | user.surname           |
+| displayname  | http​://schemas.microsoft.com/identity/claims           | Attribute | user.displayname       |
+
+These are the minimum claims to be passed. You can also pass extra claims and
+store them in the user's authorization metadata as explained in the
+[Customization](#customization) section of this document. This may be useful
+e.g. if you want to limit some sections of your service only to specific users
+using Decidim's action authorizers.
+
+### Configuring ADFS
+
+ADFS does not generally undestand the SAML metadata very well and it does not
+provide any further information about what might be wrong with the SAML
+metadata XML. Therefore, the metadata you will see in the Decidim's metadata URL
+will most likely not work when trying to directly import it to ADFS unless you
+figure out what is missing from it and add it using the `:sp_metadata`
+configuration (if you figure it out, do let us know). This seems to be a rather
+common problem with ADFS using the SAML based relying party trusts.
+
+To configure ADFS, follow these steps:
+
+1. Open your Decidim instance's metadata url as specified above in order to get
+   the required data from it.
+2. On the ADFS server, open AD FS Management and select "Add Relying Party
+   Trust" under "Relying Party Trusts".
+3. For the data source, select "Enter data about the relying party manually".
+4. For the "Display name" set whatever your instance is called.
+5. For profile, select "AD FS Profile" which allows connecting with SAML.
+6. Bypass the ceritifcate configuration unless you have configured an SP
+   certificate in the module's configuration. Consult the ADFS administrator to
+   get further information about the organization's security policies regarding
+   this.
+7. In the URL configuration, select "Enable support for the SAML 2.0 WebSSO
+   protocol" and provide the following URL as the service URL (modified with
+   your instance's domain):
+   https://your-organization.org/users/auth/msad/callback
+8. In the relying party trust identifier section, add the following URL:
+   https://your-organization.org/users/auth/msad/metadata. Note that if you have
+   customized the SAML entity ID for your instance, use that insted. You should
+   see the correct value from your instance's metadata URL.
+9. In the final step, leave "Open the Edit Claim Rules dialog" checked and
+   proceed to configuring the claims.
+10. Click "Add Rule" and pick "Send LDAP Attributes as Claims" as the claim rule
+    template.
+11. Give the rule name "SAMLAttributes" and configure the values as shown in the
+    table below.
+12. Add a transform rule by selecting "Transform an Incoming Claim" as the claim
+    rule template. For the transform rule, define the following properties:
+    * Claim rule name: `NameID Transform`
+    * Incoming claim type: `Name ID`
+    * Outgoing claim type: `Name ID`
+    * Outgoing name ID format: `Email`
+    * Pass through all claim values
+13. Change the relying party trust secure hash algorithm to SHA-256 under the
+    relying party's "Properties" window's "Advanced" tab.
+
+These are the attributes you will need to configure for the "SAMLAttributes"
+rule:
+
+| LDAP Attribute      | Outgoing Claim Type                                      |
+| ------------------- | -------------------------------------------------------- |
+| E-Mail-Addresses    | Name ID                                                  |
+| E-Mail-Addresses    | E-Mail Address                                           |
+| User-Principal-Name | Name                                                     |
+| Given-Name          | Given Name                                               |
+| Surname             | Surname                                                  |
+| DisplayName         | http​://schemas.microsoft.com/identity/claims/displayname |
+
+The claims should be passed back to Decidim with the following schema names:
+
+- E-Mail Address: http​://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress
+- Name: http​://schemas.xmlsoap.org/ws/2005/05/identity/claims/name
+- Given Name: http​://schemas.xmlsoap.org/ws/2005/05/identity/claims/givenname
+- Surname: http​://schemas.xmlsoap.org/ws/2005/05/identity/claims/surname
+- DisplayName: http​://schemas.microsoft.com/identity/claims/displayname
+
+If this is not the case for a reason or another, adjust the "Outgoing Claim
+Type" to match these values.
+
+These are the minimum claims to be passed. You can also pass extra claims and
+store them in the user's authorization metadata as explained in the
+[Customization](#customization) section of this document. This may be useful
+e.g. if you want to limit some sections of your service only to specific users
+using Decidim's action authorizers.
+
+After the ADFS side is configured, change the `:idp_metadata_url` to match the
+ADFS server's metadata URL if you haven't configured it yet. The format of the
+URL should look similar to this:
+
+https://adfs.your-organization.org/FederationMetadata/2007-06/FederationMetadata.xml
+
+#### Debugging the SAML responses
+
+If your ADFS integration is not working properly and you will get login errors,
+the first thing to check is the SAML response data passed from the ADFS server.
+To do this, temporarily enable POST data logging on your server in order to
+inspect the SAML responses from the ADFS server. Once you see the responses in
+your logs, you can convert them to human readable XML using the following Ruby
+code:
+
+```ruby
+require "ruby-saml"
+
+idp_metadata_parser = OneLogin::RubySaml::IdpMetadataParser.new
+settings = idp_metadata_parser.parse_remote("IDP_METADATA_URL_HERE")
+raw_response = CGI.unescape("ENCODED_SAMLRESPONSE_POST_DATA")
+response = OneLogin::RubySaml::Response.new(raw_response, { settings: settings })
+puts response.document.to_s.inspect
+```
+
+This will print the SAMLResponse in human readable XML for further inspection.
+
+#### Error: "Authentication failed or cancelled. Please try again."
+
+If you see the SAML StatusCode
+`urn:oasis:names:tc:SAML:2.0:status:InvalidNameIDPolicy` in the SAML response
+data, it can mean that the ADFS server is not passing the SPNameQualifier value
+as a claim back to the Decidim instance. In order to fix this, add a new claim
+rule and select "Send Claims Using a Custom Rule". Give the rule name
+"SPNameQualifier" and define the following in the "Custom rule" field:
+
+```
+c:[Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress"]
+=> issue(Type = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier", Issuer = c.Issuer, OriginalIssuer = c.OriginalIssuer, Value = c.Value, ValueType = c.ValueType, Properties["http://schemas.xmlsoap.org/ws/2005/05/identity/claimproperties/format"] = "urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress", Properties["http://schemas.xmlsoap.org/ws/2005/05/identity/claimproperties/spnamequalifier"] = "YOUR_ENTITY_ID_HERE");
+```
+
+In the rule, replace `YOUR_ENTITY_ID_HERE` with the entity ID of your instance
+which should be `https://your-organization.org/users/auth/msad/metadata` with
+the default configurations.
+
+Alternatively, you could also try to configure a different NameID format from
+the ADFS side and specify the format for this module using the following
+configuration in the initializer:
+
+```ruby
+# config/initializers/msad.rb
+
+Decidim::Msad.configure do |config|
+  # ... keep the default configuration as is ...
+  # Add this extra configuration:
+  config.extra = {
+    # Specify the actual name identifier format the ADFS server is set to serve.
+    # Should be one of the following:
+    # - urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress
+    # - urn:oasis:names:tc:SAML:2.0:nameid-format:persistent
+    # - urn:oasis:names:tc:SAML:2.0:nameid-format:transient
+    # - urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified
+    name_identifier_format: "urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress"
+  }
+end
+```
+
+Note that the NameID field you configure at the ADFS side is used to uniquely
+identify the users, so it should be unique per user and at least somewhat
+permanent for all users.
+
+#### Error: Sign in attempt failed through MSAD because "Invalid ticket".
+
+In case you see an "Invalid ticket" error durign your login, make sure that you
+have gone through the previous "Authentication failed or cancelled". After this,
+check that your entity ID is correct in the custom rule and matches the entity
+ID you see in the metadata.
+
 ## Usage
 
-After the installation steps, you will need to enable the Active Directory
-authorization from Decidim's system management panel. After enabled, you can
-start using it.
+After the installation and configuration steps, you will need to enable the
+Active Directory sign in method and authorization from Decidim's system
+management panel. After enabled, you can start using it.
 
-This gem also provides a Active Directory sign in method which will
-automatically authorize the user accounts. In case the users already have an
-account, they can still authorize themselves using the Active Directory
-authorization.
+The Active Directory sign in method shipped with this gem will automatically
+authorize the user accounts that signed in through AD. In case the users already
+have an account, they can still authorize their existing accounts using the
+Active Directory authorization if they want to avoid generating multiple user
+accounts. This happens from the authorizations section of the user profile
+pages.
 
 ## Customization
 
