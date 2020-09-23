@@ -121,6 +121,21 @@ module Decidim
             expect(subject.validate!).to be(true)
           end
 
+          context "when an identity already exists" do
+            let(:user) { create(:user, :confirmed, organization: organization) }
+            let!(:identity) do
+              user.identities.create!(
+                organization: organization,
+                provider: oauth_provider,
+                uid: oauth_uid
+              )
+            end
+
+            it "returns true for valid authentication data" do
+              expect(subject.validate!).to be(true)
+            end
+          end
+
           context "when no SAML attributes are available" do
             let(:saml_attributes) { {} }
 
@@ -323,6 +338,51 @@ module Decidim
               end.to raise_error(
                 Decidim::Msad::Authentication::AuthorizationBoundToOtherUserError
               )
+            end
+          end
+        end
+
+        describe "#update_user!" do
+          let(:oauth_email) { "omniauth@example.org" }
+
+          let(:user) { create(:user, :confirmed, organization: organization) }
+          let(:signature) do
+            ::Decidim::OmniauthRegistrationForm.create_signature(
+              oauth_provider,
+              oauth_uid
+            )
+          end
+
+          it "updates the user's email address in case it has changed" do
+            subject.update_user!(user)
+
+            expect(user.email).to eq(oauth_email)
+          end
+
+          it "does not sign the user up to the newsletters" do
+            subject.update_user!(user)
+
+            expect(user.newsletter_notifications_at).to be(nil)
+          end
+
+          context "when signing up new users to newsletters is enabled" do
+            before do
+              allow(Decidim::Msad).to receive(:registration_newsletter_subscriptions).and_return(true)
+            end
+
+            it "signs up a new user to the newsletters" do
+              # Calling validate! sets the @new_user instance variable to true
+              # when the identity does not yet exist.
+              subject.validate!
+              subject.update_user!(user)
+
+              expect(user.newsletter_notifications_at).to be_a(::Time)
+            end
+
+            it "does not sign up existing users to the newsletters" do
+              subject.update_user!(user)
+
+              expect(user.newsletter_notifications_at).to be(nil)
             end
           end
         end

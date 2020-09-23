@@ -92,6 +92,15 @@ module Decidim
       {}
     end
 
+    # Defines whether registered users are automatically subscribed to the
+    # newsletters during the OmniAuth registration flow. This is only updated
+    # during the first login, so users can still unsubscribe if they later
+    # decide they don't want to receive the newsletter and later logins will not
+    # change the subscription state.
+    config_accessor :registration_newsletter_subscriptions do
+      false
+    end
+
     # Allows customizing the authorization workflow e.g. for adding custom
     # workflow options or configuring an action authorizer for the
     # particular needs.
