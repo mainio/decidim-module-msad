@@ -4,6 +4,8 @@
 [![codecov](https://codecov.io/gh/mainio/decidim-module-msad/branch/master/graph/badge.svg)](https://codecov.io/gh/mainio/decidim-module-msad)
 [![Crowdin](https://badges.crowdin.net/decidim-msad/localized.svg)](https://crowdin.com/project/decidim-msad)
 
+![Decidim MSAD](decidim-msad.png)
+
 A [Decidim](https://github.com/decidim/decidim) module to add Microsoft Active
 Directory (AD) authentication to Decidim as a way to authenticate and authorize
 the users. Can be integrated to Azure AD or ADFS running on the organization's
