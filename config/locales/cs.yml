@@ -2,25 +2,25 @@ cs:
   decidim:
     authorization_handlers:
       msad_identity:
-        explanation: Identify yourself using the Active Directory identity service.
-        name: Active Directory identity
+        explanation: Identifikujte se pomocí identifikační služby Active Directory.
+        name: Identita služby Active Directory
     msad:
       omniauth_callbacks:
         failure:
-          already_authorized: Another user has already authorized themselves with the same identity.
-          conditions: The authentication request was not handled within an allowed timeframe. Please try again.
-          identity_bound_to_other_user: Another user has already been identified using this identity. Please sign out and sign in again directly using Active Directory.
-          invalid_data: You cannot be authenticated through Active Directory.
-          session_expiration: Authentication session expired. Please try again.
-          success_status: Authentication failed or cancelled. Please try again.
+          already_authorized: Jiný uživatel se již autorizoval se stejnou identitou.
+          conditions: Požadavek na ověření nebyl zpracován v rámci povoleného časového rámce. Zkuste to prosím znovu.
+          identity_bound_to_other_user: Pomocí této identity již byl identifikován jiný uživatel. Přihlaste se znovu přímo pomocí Active Directory.
+          invalid_data: Nemůžete být ověřen prostřednictvím Active Directory.
+          session_expiration: Platnost relace ověření vypršela. Zkuste to prosím znovu.
+          success_status: Ověření se nezdařilo nebo bylo zrušeno. Zkuste to prosím znovu.
       verification:
         authorizations:
           create:
-            success: You have been successfully authorized through Active Directory
+            success: Byli jste úspěšně autorizováni prostřednictvím služby Active Directory
           destroy:
-            success: Authorization sucessfully reset.
+            success: Autorizace byla úspěšně obnovena.
     system:
       organizations:
         omniauth_settings:
           msad:
-            metadata_url: Metadata URL
+            metadata_url: URL metadat
