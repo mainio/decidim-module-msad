@@ -6,8 +6,9 @@ module Decidim
   module Msad
     module Verification
       describe MetadataCollector do
-        subject { described_class.new(OneLogin::RubySaml::Attributes.new(saml_attributes)) }
+        subject { described_class.new(tenant, OneLogin::RubySaml::Attributes.new(saml_attributes)) }
 
+        let(:tenant) { Decidim::Msad.tenants.first }
         let(:oauth_provider) { "provider" }
         let(:oauth_uid) { "uid" }
         let(:oauth_email) { nil }
@@ -35,7 +36,7 @@ module Decidim
 
         context "when the module has not been configured to collect the metadata" do
           before do
-            Decidim::Msad.metadata_attributes = {}
+            tenant.metadata_attributes = {}
           end
 
           it "does not collect any metadata" do
@@ -45,7 +46,7 @@ module Decidim
 
         context "when the module has been cofigured to collect the metadata" do
           before do
-            Decidim::Msad.metadata_attributes = {
+            tenant.metadata_attributes = {
               name: "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name",
               email: "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress",
               first_name: "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/givenname",
@@ -62,7 +63,7 @@ module Decidim
           end
 
           after do
-            Decidim::Msad.metadata_attributes = {}
+            tenant.metadata_attributes = {}
           end
 
           it "collects the correct metadata" do

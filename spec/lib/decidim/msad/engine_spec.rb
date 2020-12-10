@@ -11,12 +11,15 @@ module Decidim
       # it manually. Normally this is done when the application's middleware
       # stack is loaded.
       after do
-        unless ::Devise.omniauth_configs[:msad].strategy
+        Decidim::Msad.tenants do |tenant|
+          name = tenant.name.to_sym
+          next if ::Devise.omniauth_configs[name].strategy
+
           ::OmniAuth::Strategies::MSAD.new(
             Rails.application,
-            Decidim::Msad.omniauth_settings
+            tenant.omniauth_settings
           ) do |strategy|
-            ::Devise.omniauth_configs[:msad].strategy = strategy
+            ::Devise.omniauth_configs[name].strategy = strategy
           end
         end
       end
@@ -33,52 +36,7 @@ module Decidim
         run_initializer("decidim_msad.mount_routes")
       end
 
-      it "adds the correct callback and passthru routes to the core engine" do
-        run_initializer("decidim_msad.mount_routes")
-
-        %w(GET POST).each do |method|
-          expect(
-            Decidim::Core::Engine.routes.recognize_path(
-              "/users/auth/msad",
-              method: method
-            )
-          ).to eq(
-            controller: "decidim/msad/omniauth_callbacks",
-            action: "passthru"
-          )
-          expect(
-            Decidim::Core::Engine.routes.recognize_path(
-              "/users/auth/msad/callback",
-              method: method
-            )
-          ).to eq(
-            controller: "decidim/msad/omniauth_callbacks",
-            action: "msad"
-          )
-        end
-      end
-
       it "adds the correct sign out routes to the core engine" do
-        %w(GET POST).each do |method|
-          expect(
-            Decidim::Core::Engine.routes.recognize_path(
-              "/users/auth/msad/slo",
-              method: method
-            )
-          ).to eq(
-            controller: "decidim/msad/sessions",
-            action: "slo"
-          )
-          expect(
-            Decidim::Core::Engine.routes.recognize_path(
-              "/users/auth/msad/spslo",
-              method: method
-            )
-          ).to eq(
-            controller: "decidim/msad/sessions",
-            action: "spslo"
-          )
-        end
         %w(DELETE POST).each do |method|
           expect(
             Decidim::Core::Engine.routes.recognize_path(
@@ -107,6 +65,8 @@ module Decidim
           config = double
           expect(config).to receive(:omniauth).with(
             :msad,
+            name: "msad",
+            strategy_class: OmniAuth::Strategies::MSAD,
             idp_metadata_url: "https://login.microsoftonline.com/987f6543-1e0d-12a3-45b6-789012c345de/federationmetadata/2007-06/federationmetadata.xml",
             sp_entity_id: "http://1.lvh.me/users/auth/msad/metadata",
             sp_name_qualifier: "http://1.lvh.me/users/auth/msad/metadata",
@@ -119,7 +79,26 @@ module Decidim
           )
           block.call(config)
         end
+        expect(::Devise).to receive(:setup) do |&block|
+          config = double
+          expect(config).to receive(:omniauth).with(
+            :other,
+            name: "other",
+            strategy_class: OmniAuth::Strategies::MSAD,
+            idp_metadata_url: "https://login.microsoftonline.com/876f5432-1e0d-12a3-45b6-789012c345de/federationmetadata/2007-06/federationmetadata.xml",
+            sp_entity_id: "http://2.lvh.me/users/auth/other/metadata",
+            sp_name_qualifier: "http://2.lvh.me/users/auth/other/metadata",
+            sp_metadata: [],
+            assertion_consumer_service_url: "https://localhost:3000/users/auth/other/callback",
+            certificate: nil,
+            private_key: nil,
+            single_logout_service_url: "https://localhost:3000/users/auth/other/slo",
+            idp_slo_session_destroy: instance_of(Proc)
+          )
+          block.call(config)
+        end
 
+        allow(Decidim::Msad).to receive(:initialized?).and_return(false)
         run_initializer("decidim_msad.setup")
       end
 
@@ -138,15 +117,30 @@ module Decidim
 
           proc.call(env)
         end
+        expect(OmniAuth.config).to receive(:on_failure=) do |proc|
+          env = double
+          action = double
+          expect(env).to receive(:[]).with("PATH_INFO").and_return(
+            "/users/auth/other"
+          )
+          expect(env).to receive(:[]=).with("devise.mapping", ::Devise.mappings[:user])
+          expect(Decidim::Msad::OmniauthCallbacksController).to receive(
+            :action
+          ).with(:failure).and_return(action)
+          expect(action).to receive(:call).with(env)
 
+          proc.call(env)
+        end
+
+        allow(Decidim::Msad).to receive(:initialized?).and_return(false)
         run_initializer("decidim_msad.setup")
       end
 
       it "falls back on the default OmniAuth failure app" do
         failure_app = double
 
-        expect(OmniAuth.config).to receive(:on_failure).and_return(failure_app)
-        expect(OmniAuth.config).to receive(:on_failure=) do |proc|
+        expect(OmniAuth.config).to receive(:on_failure).twice.and_return(failure_app)
+        expect(OmniAuth.config).to receive(:on_failure=).twice do |proc|
           env = double
           expect(env).to receive(:[]).with("PATH_INFO").and_return(
             "/something/else"
@@ -156,6 +150,7 @@ module Decidim
           proc.call(env)
         end
 
+        allow(Decidim::Msad).to receive(:initialized?).and_return(false)
         run_initializer("decidim_msad.setup")
       end
 

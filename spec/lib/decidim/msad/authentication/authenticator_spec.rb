@@ -6,8 +6,9 @@ module Decidim
   module Msad
     module Authentication
       describe Authenticator do
-        subject { described_class.new(organization, oauth_hash) }
+        subject { described_class.new(tenant, organization, oauth_hash) }
 
+        let(:tenant) { Decidim::Msad.tenants.first }
         let(:organization) { create(:organization) }
         let(:oauth_hash) do
           {
@@ -60,7 +61,7 @@ module Decidim
 
             context "and auto_email_domain is not defined" do
               before do
-                allow(Decidim::Msad).to receive(:auto_email_domain).and_return(nil)
+                allow(tenant).to receive(:auto_email_domain).and_return(nil)
               end
 
               it "auto-creates the email using the known pattern" do
@@ -270,7 +271,7 @@ module Decidim
             end
 
             before do
-              Decidim::Msad.metadata_attributes = {
+              tenant.metadata_attributes = {
                 department: "Department",
                 location: "Location",
                 phone: "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/mobilephone",
@@ -282,7 +283,7 @@ module Decidim
             end
 
             after do
-              Decidim::Msad.metadata_attributes = {}
+              tenant.metadata_attributes = {}
             end
 
             it "creates a new authorization for the user with the correct metadata" do
@@ -367,7 +368,7 @@ module Decidim
 
           context "when signing up new users to newsletters is enabled" do
             before do
-              allow(Decidim::Msad).to receive(:registration_newsletter_subscriptions).and_return(true)
+              allow(tenant).to receive(:registration_newsletter_subscriptions).and_return(true)
             end
 
             it "signs up a new user to the newsletters" do

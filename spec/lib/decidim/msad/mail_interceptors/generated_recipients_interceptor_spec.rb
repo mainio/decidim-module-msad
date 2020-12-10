@@ -12,21 +12,30 @@ module Decidim
           let(:message) { double }
 
           before do
-            allow(Decidim::Msad).to receive(:auto_email_domain).and_return(nil)
+            Decidim::Msad.tenants.each do |tenant|
+              allow(tenant).to receive(:auto_email_domain).and_return(nil)
+            end
           end
 
-          it "does nothing" do
-            expect(message).not_to receive(:to)
-            expect(message).not_to receive(:cc)
-            expect(message).not_to receive(:bcc)
-            expect(message).not_to receive(:perform_deliveries)
+          it "delivers the email to all recipients" do
+            expect do
+              ActionMailer::Base.mail(
+                mailer_defaults.merge(
+                  to: ["first@recipient.com", "other@recipient.com"],
+                  from: "from@service.com"
+                )
+              ).deliver
+            end.to change(ActionMailer::Base.deliveries, :count).by(1)
 
-            described_class.delivering_email(message)
+            mail = ActionMailer::Base.deliveries.last
+            expect(mail.to).to eq(["first@recipient.com", "other@recipient.com"])
+            expect(mail.from).to eq(["from@service.com"])
           end
         end
 
         context "when the auto-generated email domain is defined" do
-          let(:domain) { Decidim::Msad.auto_email_domain }
+          let(:tenant) { Decidim::Msad.tenants.first }
+          let(:domain) { tenant.auto_email_domain }
           let(:from_email) { "test@#{domain}" }
           let(:generated_email) do
             digest = Digest::MD5.hexdigest("test")

@@ -11,6 +11,7 @@ module Decidim
     # requests and the MSAD OmniAuth strategy to handle our generated
     # SAMLResponse.
     describe OmniauthCallbacksController, type: :request do
+      let(:tenant) { Decidim::Msad.tenants.first }
       let(:organization) { create(:organization) }
 
       # For testing with signed in user
@@ -25,7 +26,7 @@ module Decidim
         )
 
         # Configure the metadata attributes to be collected
-        Decidim::Msad.metadata_attributes = {
+        tenant.metadata_attributes = {
           name: "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name",
           first_name: "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/givenname",
           last_name: "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/surname",
@@ -53,7 +54,7 @@ module Decidim
 
       after do
         # Reset the metadata attributes back to defaults
-        Decidim::Msad.metadata_attributes = {}
+        tenant.metadata_attributes = {}
 
         # Reset the before_callback_phase for the other tests
         OmniAuth.config.before_callback_phase {}

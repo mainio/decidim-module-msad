@@ -27,6 +27,15 @@ module Decidim
 
             block.call(workflow)
           end
+          expect(Decidim::Verifications).to receive(
+            :register_workflow
+          ).with(:other_identity) do |&block|
+            workflow = double
+            expect(workflow).to receive(:engine=).with(described_class)
+            expect(workflow).to receive(:expires_in=).with(0.minutes)
+
+            block.call(workflow)
+          end
 
           run_initializer("decidim_msad.verification_workflow")
         end

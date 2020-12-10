@@ -23,11 +23,18 @@ Decidim::Msad::Test::Runtime.initializer do
   # Silence the OmniAuth logger
   OmniAuth.config.logger = Logger.new("/dev/null")
 
-  # Configure the MSAD module
+  # Configure the MSAD module with two tenants
   Decidim::Msad.configure do |config|
+    # Using default name: msad
     config.idp_metadata_url = "https://login.microsoftonline.com/987f6543-1e0d-12a3-45b6-789012c345de/federationmetadata/2007-06/federationmetadata.xml"
     config.sp_entity_id = "http://1.lvh.me/users/auth/msad/metadata"
     config.auto_email_domain = "1.lvh.me"
+  end
+  Decidim::Msad.configure do |config|
+    config.name = "other"
+    config.idp_metadata_url = "https://login.microsoftonline.com/876f5432-1e0d-12a3-45b6-789012c345de/federationmetadata/2007-06/federationmetadata.xml"
+    config.sp_entity_id = "http://2.lvh.me/users/auth/other/metadata"
+    config.auto_email_domain = "2.lvh.me"
   end
 end
 
@@ -44,6 +51,12 @@ WebMock::StubRegistry.instance.register_request_stub(
   WebMock::RequestStub.new(
     :get,
     "https://login.microsoftonline.com/987f6543-1e0d-12a3-45b6-789012c345de/federationmetadata/2007-06/federationmetadata.xml"
+  )
+).to_return(status: 200, body: File.new(metadata_path), headers: {})
+WebMock::StubRegistry.instance.register_request_stub(
+  WebMock::RequestStub.new(
+    :get,
+    "https://login.microsoftonline.com/876f5432-1e0d-12a3-45b6-789012c345de/federationmetadata/2007-06/federationmetadata.xml"
   )
 ).to_return(status: 200, body: File.new(metadata_path), headers: {})
 
