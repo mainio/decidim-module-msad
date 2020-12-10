@@ -164,10 +164,23 @@ module Decidim
       end
 
       def authenticator
-        @authenticator ||= Decidim::Msad.authenticator_for(
+        @authenticator ||= tenant.authenticator_for(
           current_organization,
           oauth_hash
         )
+      end
+
+      def tenant
+        @tenant ||= begin
+          matches = request.path.match(%r{^/users/auth/(msad)/.+})
+          raise "Invalid MSAD tenant" unless matches
+
+          name = matches[1]
+          tenant = Decidim::Msad.tenants.find { |t| t.name == name }
+          raise "Unkown MSAD tenant: #{name}" unless tenant
+
+          tenant
+        end
       end
 
       def verified_email

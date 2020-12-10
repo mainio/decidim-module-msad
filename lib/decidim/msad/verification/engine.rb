@@ -17,25 +17,27 @@ module Decidim
         end
 
         initializer "decidim_msad.verification_workflow", after: :load_config_initializers do
-          next unless Decidim::Msad.configured?
+          Decidim::Msad.tenants.each do |tenant|
+            # We cannot use the same name as the tenant for the verification
+            # workflow because otherwise the route namespace (e.g.
+            # "decidim_msad") would conflict with the main engine controlling
+            # the authentication flows. The main problem that this would bring
+            # is that the root path for this engine would not be found.
+            Decidim::Verifications.register_workflow("#{tenant.name}_identity".to_sym) do |workflow|
+              workflow.engine = Decidim::Msad::Verification::Engine
 
-          # We cannot use the name `:msad` for the verification workflow
-          # because otherwise the route namespace (decidim_msad) would
-          # conflict with the main engine controlling the authentication flows.
-          # The main problem that this would bring is that the root path for
-          # this engine would not be found.
-          Decidim::Verifications.register_workflow(:msad_identity) do |workflow|
-            workflow.engine = Decidim::Msad::Verification::Engine
-
-            Decidim::Msad::Verification::Manager.configure_workflow(workflow)
+              tenant.workflow_configurator.call(workflow)
+            end
           end
         end
 
         def load_seed
-          # Enable the `:msad_identity` authorization
-          org = Decidim::Organization.first
-          org.available_authorizations << :msad_identity
-          org.save!
+          Decidim::Msad.tenants.each do |tenant|
+            # Enable the authorizations for each tenant
+            org = Decidim::Organization.first
+            org.available_authorizations << "#{tenant.name}_identity".to_sym
+            org.save!
+          end
         end
       end
     end

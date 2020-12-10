@@ -6,7 +6,8 @@ module Decidim
       class Authenticator
         include ActiveModel::Validations
 
-        def initialize(organization, oauth_hash)
+        def initialize(tenant, organization, oauth_hash)
+          @tenant = tenant
           @organization = organization
           @oauth_hash = oauth_hash
           @new_user = false
@@ -17,8 +18,7 @@ module Decidim
             if oauth_data[:info][:email]
               oauth_data[:info][:email]
             else
-              domain = ::Decidim::Msad.auto_email_domain || organization.host
-              "msad-#{person_identifier_digest}@#{domain}"
+              tenant.auto_email_for(organization, person_identifier_digest)
             end
           end
         end
@@ -125,14 +125,14 @@ module Decidim
         # the organization belonging to a specific group.
         def authorize_user!(user)
           authorization = ::Decidim::Authorization.find_by(
-            name: "msad_identity",
+            name: "#{tenant.name}_identity",
             unique_id: user_signature
           )
           if authorization
             raise AuthorizationBoundToOtherUserError if authorization.user != user
           else
             authorization = ::Decidim::Authorization.find_or_initialize_by(
-              name: "msad_identity",
+              name: "#{tenant.name}_identity",
               user: user
             )
           end
@@ -169,13 +169,13 @@ module Decidim
 
         protected
 
-        attr_reader :organization, :oauth_hash
+        attr_reader :organization, :tenant, :oauth_hash
 
         def user_newsletter_subscription?(user)
           return false unless @new_user
 
           # Return if newsletter subscriptions are not configured
-          return false unless ::Decidim::Msad.registration_newsletter_subscriptions
+          return false unless tenant.registration_newsletter_subscriptions
 
           user.newsletter_notifications_at.nil?
         end
@@ -202,9 +202,7 @@ module Decidim
         end
 
         def metadata_collector
-          @metadata_collector ||= ::Decidim::Msad::Verification::Manager.metadata_collector_for(
-            saml_attributes
-          )
+          @metadata_collector ||= tenant.metadata_collector_for(saml_attributes)
         end
 
         # Data that is stored against the authorization "permanently" (i.e. as
@@ -220,7 +218,7 @@ module Decidim
           return if user_identifier.blank?
 
           @person_identifier_digest ||= Digest::MD5.hexdigest(
-            "MSAD:#{user_identifier}:#{Rails.application.secrets.secret_key_base}"
+            "#{tenant.name.upcase}:#{user_identifier}:#{Rails.application.secrets.secret_key_base}"
           )
         end
       end

@@ -1,6 +1,13 @@
 # frozen_string_literal: true
 
 Decidim::Msad.configure do |config|
+  # Define the name for the tenant. Only lowercase characters and underscores
+  # are allowed. If you only have a single AD tenant, you don't need to
+  # configure its name. When not configured, it will default to "msad". When you
+  # want to connect to multiple tenants, you will need to define a unique name
+  # for each tenant.
+  # config.name = "msad"
+
   # Define the IdP metadata URL through the secrets
   config.idp_metadata_url = Rails.application.secrets.omniauth[:msad][:metadata_url]
 

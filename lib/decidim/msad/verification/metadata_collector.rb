@@ -4,23 +4,24 @@ module Decidim
   module Msad
     module Verification
       class MetadataCollector
-        def initialize(saml_attributes)
+        def initialize(tenant, saml_attributes)
+          @tenant = tenant
           @saml_attributes = saml_attributes
         end
 
         def metadata
-          return nil unless Decidim::Msad.metadata_attributes.is_a?(Hash)
-          return nil if Decidim::Msad.metadata_attributes.blank?
+          return nil unless tenant.metadata_attributes.is_a?(Hash)
+          return nil if tenant.metadata_attributes.blank?
 
           collect.delete_if { |_k, v| v.nil? }
         end
 
         protected
 
-        attr_reader :saml_attributes
+        attr_reader :tenant, :saml_attributes
 
         def collect
-          Decidim::Msad.metadata_attributes.map do |key, defs|
+          tenant.metadata_attributes.map do |key, defs|
             value = begin
               case defs
               when Hash
