@@ -56,6 +56,9 @@ You need to set the following configuration options inside the initializer:
 
 Optionally you can also configure the module with the following options:
 
+- `:name` - The name of the AD provider. Only lowercase characters and
+  underscores are allowed. Defaults to "msad" with only a single tenant. With
+  multiple tenants, each tenant needs to have an individual distinct name.
 - `:auto_email_domain` - Defines the auto-email domain in case the user's domain
   is not stored at the federation server. In case this is not set (default),
   emails will not be auto-generated and users will need to enter them manually
@@ -114,6 +117,45 @@ The example configuration will set the `account-login` icon for the the
 authentication button from the Decidim's own iconset. In case you want to have a
 better and more formal styling for the sign in button, you will need to
 customize the sign in / sign up views.
+
+### Connecting with multiple tenants
+
+In case you want to integrate with multiple Azure AD or ADFS tenants, you can
+duplicate the configuration block in the sample configuration as follows:
+
+```ruby
+# First tenant
+Decidim::Msad.configure do |config|
+  config.name = "msad"
+  # => Configuration for the "msad" tenant (copy the sample config here)
+end
+
+# Second tenant
+Decidim::Msad.configure do |config|
+  config.name = "otherad"
+  # => Configuration for the "msad_other" tenant (copy the sample config here)
+end
+```
+
+Please note that in this case you will need to configure an individual name for
+each tenant. If you fail to do this, you may see obscure error messages when
+trying to start the server.
+
+You should always begin with a single tenant to get a better understanding of
+how to configure this module and Azure AD or ADFS. Once you are ready with the
+first tenant, go ahead and configure another one.
+
+**IMPORTANT:** The beginning of the tenant names cannot match with each other.
+Please use fully distinct names for each tenant. Consider the following examples
+for further instructions:
+
+- **Correct**:
+  * First tenant: `config.name = "internal_msad"`
+  * Second tenant: `config.name = "external_msad"`
+- Incorrect:
+  * ~~First tenant: `config.name = "msad"`~~
+  * ~~Second tenant: `config.name = "msad_external"`~~ (the first tenant's name
+    would match with this string when compared from the beginning of the string)
 
 ## Configuring the federation server
 
