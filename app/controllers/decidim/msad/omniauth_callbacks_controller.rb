@@ -14,6 +14,7 @@ module Decidim
       # flow from the Active Directory identity provider.
       def msad
         session["decidim-msad.signed_in"] = true
+        session["decidim-msad.tenant"] = tenant.name
 
         authenticator.validate!
 
@@ -137,14 +138,16 @@ module Decidim
       def fail_authorize(failure_message_key = :already_authorized)
         flash[:alert] = t(
           "failure.#{failure_message_key}",
-          scope: "decidim.msad.omniauth_callbacks"
+          scope: "decidim.#{tenant.name}.omniauth_callbacks"
         )
 
         redirect_path = stored_location_for(resource || :user) || decidim.root_path
         if session.delete("decidim-msad.signed_in")
+          tenant = session.delete("decidim-msad.tenant")
           params = "?RelayState=#{CGI.escape(redirect_path)}"
+          sign_out_path = send("user_#{tenant}_omniauth_spslo_path")
 
-          return redirect_to user_msad_omniauth_spslo_path + params
+          return redirect_to sign_out_path + params
         end
 
         redirect_to redirect_path

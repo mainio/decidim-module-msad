@@ -7,6 +7,8 @@ module Decidim
         # In case the user is signed in through the AD federation server,
         # redirect them through the SPSLO flow.
         if session.delete("decidim-msad.signed_in")
+          tenant = session.delete("decidim-msad.tenant")
+
           # These session variables get destroyed along with the user's active
           # session. They are needed for the SLO request.
           saml_uid = session["saml_uid"]
@@ -27,7 +29,11 @@ module Decidim
           relay += "?success=1" if signed_out
           params = "?RelayState=#{CGI.escape(relay)}"
 
-          return redirect_to user_msad_omniauth_spslo_path + params
+          # Individual sign out path for each tenant to pass it to correct
+          # OmniAuth handler.
+          sign_out_path = send("user_#{tenant}_omniauth_spslo_path")
+
+          return redirect_to sign_out_path + params
         end
 
         # Otherwise, continue normally
