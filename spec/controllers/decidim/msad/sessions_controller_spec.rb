@@ -41,6 +41,7 @@ module Decidim
             # Generate a dummy session by requesting the home page.
             get "/"
             request.session["decidim-msad.signed_in"] = true
+            request.session["decidim-msad.tenant"] = "msad"
 
             post "/users/sign_out", env: {
               "rack.session" => request.session,
