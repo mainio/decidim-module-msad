@@ -23,5 +23,5 @@ sv:
       organizations:
         omniauth_settings:
           msad:
-            metadata_file: Metadata file
+            metadata_file: Metadata fil
             metadata_url: Metadata URL
