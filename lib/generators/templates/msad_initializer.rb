@@ -10,6 +10,10 @@ Decidim::Msad.configure do |config|
 
   # Define the IdP metadata URL through the secrets
   config.idp_metadata_url = Rails.application.secrets.omniauth[:msad][:metadata_url]
+  # If there is no public metadata URL, alternatively you can define the IdP
+  # metadata file through the secrets. Always prefer the URL configuration
+  # because it updates automatically in case something changes on the server.
+  # config.idp_metadata_file = Rails.application.secrets.omniauth[:msad][:metadata_file]
 
   # Define the service provider entity ID:
   # config.sp_entity_id = "https://www.example.org/users/auth/msad/metadata"
