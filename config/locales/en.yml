@@ -24,4 +24,5 @@ en:
       organizations:
         omniauth_settings:
           msad:
+            metadata_file: Metadata file
             metadata_url: Metadata URL
