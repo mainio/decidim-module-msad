@@ -7,6 +7,9 @@ require "omniauth/msad/settings"
 module OmniAuth
   module Strategies
     class MSAD < SAML
+      # The IdP metadata file.
+      option :idp_metadata_file, nil
+
       # The IdP metadata URL.
       option :idp_metadata_url, nil
 
@@ -91,16 +94,22 @@ module OmniAuth
 
         # Returns OneLogin::RubySaml::Settings prepopulated with idp metadata
         settings = begin
-          begin
-            idp_metadata_parser.parse_remote_to_hash(
-              options.idp_metadata_url,
-              true
+          if options.idp_metadata_file
+            idp_metadata_parser.parse_to_hash(
+              File.read(options.idp_metadata_file)
             )
-          rescue ::URI::InvalidURIError
-            # Allow the OmniAuth strategy to be configured with empty settings
-            # in order to provide the metadata URL even when the authentication
-            # endpoint is not configured.
-            {}
+          else
+            begin
+              idp_metadata_parser.parse_remote_to_hash(
+                options.idp_metadata_url,
+                true
+              )
+            rescue ::URI::InvalidURIError
+              # Allow the OmniAuth strategy to be configured with empty settings
+              # in order to provide the metadata URL even when the authentication
+              # endpoint is not configured.
+              {}
+            end
           end
         end
 

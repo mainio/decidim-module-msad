@@ -22,6 +22,7 @@ module Decidim
       # In case this is not defined, the default is the organization's domain.
       config_accessor :auto_email_domain
 
+      config_accessor :idp_metadata_file
       config_accessor :idp_metadata_url
       config_accessor :sp_entity_id, instance_reader: false
 
@@ -168,6 +169,7 @@ module Decidim
         {
           name: name,
           strategy_class: OmniAuth::Strategies::MSAD,
+          idp_metadata_file: idp_metadata_file,
           idp_metadata_url: idp_metadata_url,
           sp_entity_id: sp_entity_id,
           sp_name_qualifier: sp_entity_id,
