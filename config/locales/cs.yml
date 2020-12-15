@@ -1,0 +1,27 @@
+cs:
+  decidim:
+    authorization_handlers:
+      msad_identity:
+        explanation: Identifikujte se pomocí identifikační služby Active Directory.
+        name: Identita služby Active Directory
+    msad:
+      omniauth_callbacks:
+        failure:
+          already_authorized: Jiný uživatel se již autorizoval se stejnou identitou.
+          conditions: Požadavek na ověření nebyl zpracován v rámci povoleného časového rámce. Zkuste to prosím znovu.
+          identity_bound_to_other_user: Pomocí této identity již byl identifikován jiný uživatel. Přihlaste se znovu přímo pomocí Active Directory.
+          invalid_data: Nemůžete být ověřen prostřednictvím Active Directory.
+          session_expiration: Platnost relace ověření vypršela. Zkuste to prosím znovu.
+          success_status: Ověření se nezdařilo nebo bylo zrušeno. Zkuste to prosím znovu.
+      verification:
+        authorizations:
+          create:
+            success: Byli jste úspěšně autorizováni prostřednictvím služby Active Directory
+          destroy:
+            success: Autorizace byla úspěšně obnovena.
+    system:
+      organizations:
+        omniauth_settings:
+          msad:
+            metadata_file: Metadata file
+            metadata_url: URL metadat
