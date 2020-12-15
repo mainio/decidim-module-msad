@@ -23,5 +23,5 @@ fi:
       organizations:
         omniauth_settings:
           msad:
-            metadata_file: Metadata file
+            metadata_file: Metadata-tiedosto
             metadata_url: Metadatan osoite (URL)
