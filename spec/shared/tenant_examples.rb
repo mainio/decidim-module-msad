@@ -8,6 +8,7 @@ shared_examples "an MSAD tenant" do |name|
   end
 
   describe "#setup!" do
+    let(:metadata_file) { double }
     let(:metadata_url) { double }
 
     it "calls setup_routes!" do
@@ -16,6 +17,7 @@ shared_examples "an MSAD tenant" do |name|
     end
 
     it "configures the MSAD omniauth strategy for Devise" do
+      expect(subject).to receive(:idp_metadata_file).and_return(metadata_file)
       expect(subject).to receive(:idp_metadata_url).and_return(metadata_url)
 
       expect(::Devise).to receive(:setup) do |&block|
@@ -24,6 +26,7 @@ shared_examples "an MSAD tenant" do |name|
           name.to_sym,
           name: name,
           strategy_class: OmniAuth::Strategies::MSAD,
+          idp_metadata_file: metadata_file,
           idp_metadata_url: metadata_url,
           sp_entity_id: "https://localhost:3000/users/auth/#{name}/metadata",
           sp_name_qualifier: "https://localhost:3000/users/auth/#{name}/metadata",
@@ -167,6 +170,7 @@ shared_examples "an MSAD tenant" do |name|
     end
 
     describe "#omniauth_settings" do
+      let(:idp_metadata_file) { double }
       let(:idp_metadata_url) { double }
       let(:sp_entity_id) { double }
       let(:sp_metadata) { double }
@@ -176,6 +180,7 @@ shared_examples "an MSAD tenant" do |name|
       let(:extra) { { extra1: "abc", extra2: 123 } }
 
       it "returns the expected omniauth configuration hash" do
+        allow(subject).to receive(:idp_metadata_file).and_return(idp_metadata_file)
         allow(subject).to receive(:idp_metadata_url).and_return(idp_metadata_url)
         allow(subject).to receive(:sp_entity_id).and_return(sp_entity_id)
         allow(subject).to receive(:sp_metadata).and_return(sp_metadata)
@@ -187,6 +192,7 @@ shared_examples "an MSAD tenant" do |name|
         expect(subject.omniauth_settings).to include(
           name: name,
           strategy_class: OmniAuth::Strategies::MSAD,
+          idp_metadata_file: idp_metadata_file,
           idp_metadata_url: idp_metadata_url,
           sp_entity_id: sp_entity_id,
           sp_name_qualifier: sp_entity_id,

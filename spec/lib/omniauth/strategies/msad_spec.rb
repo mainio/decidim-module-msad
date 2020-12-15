@@ -29,12 +29,14 @@ module OmniAuth
       let(:auth_hash) { last_request.env["omniauth.auth"] }
       let(:saml_options) do
         {
+          idp_metadata_file: idp_metadata_file,
           idp_metadata_url: idp_metadata_url,
           sp_entity_id: sp_entity_id,
           certificate: certificate.to_pem,
           private_key: private_key.to_pem
         }
       end
+      let(:idp_metadata_file) { nil }
       let(:idp_metadata_url) { "https://login.microsoftonline.com/987f6543-1e0d-12a3-45b6-789012c345de/federationmetadata/2007-06/federationmetadata.xml" }
       let(:sp_entity_id) { "https://1.lvh.me/users/auth/msad/metadata" }
       let(:strategy) { [described_class, saml_options] }
@@ -46,81 +48,90 @@ module OmniAuth
       describe "#initialize" do
         subject { get "/users/auth/msad/metadata" }
 
-        it "applies the local options and the IdP metadata options" do
-          expect(subject).to be_successful
-
-          instance = last_request.env["omniauth.strategy"]
-
-          expect(instance.options[:sp_entity_id]).to eq(
-            "https://1.lvh.me/users/auth/msad/metadata"
-          )
-          expect(instance.options[:certificate]).to eq(certificate.to_pem)
-          expect(instance.options[:private_key]).to eq(private_key.to_pem)
-          expect(instance.options[:security]).to include(
-            "authn_requests_signed" => true,
-            "logout_requests_signed" => false,
-            "logout_responses_signed" => false,
-            "want_assertions_signed" => true,
-            "want_assertions_encrypted" => false,
-            "want_name_id" => false,
-            "metadata_signed" => false,
-            "embed_sign" => false,
-            "digest_method" => XMLSecurity::Document::SHA256,
-            "signature_method" => XMLSecurity::Document::RSA_SHA256,
-            "check_idp_cert_expiration" => false,
-            "check_sp_cert_expiration" => false
-          )
-
-          # Check the automatically set options
-          expect(instance.options[:assertion_consumer_service_url]).to eq(
-            "https://1.lvh.me/users/auth/msad/callback"
-          )
-          expect(instance.options[:sp_name_qualifier]).to eq(
-            "https://1.lvh.me/users/auth/msad/metadata"
-          )
-          expect(instance.options[:idp_name_qualifier]).to eq(
-            "https://sts.windows.net/987f6543-1e0d-12a3-45b6-789012c345de/"
-          )
-
-          # Check the most important metadata options
-          expect(instance.options[:idp_entity_id]).to eq(
-            "https://sts.windows.net/987f6543-1e0d-12a3-45b6-789012c345de/"
-          )
-          expect(instance.options[:name_identifier_format]).to eq(
-            "urn:oasis:names:tc:SAML:2.0:nameid-format:persistent"
-          )
-          expect(instance.options[:idp_slo_target_url]).to eq(
-            "https://login.microsoftonline.com/987f6543-1e0d-12a3-45b6-789012c345de/saml2"
-          )
-          expect(instance.options[:idp_sso_target_url]).to eq(
-            "https://login.microsoftonline.com/987f6543-1e0d-12a3-45b6-789012c345de/saml2"
-          )
-
-          idp_cert = File.read(file_fixture("idp.crt"))
-          expect(instance.options[:idp_cert]).to eq(
-            # Remove the comments and newlines from the cert
-            idp_cert.gsub(/-----[^\-]+-----/, "").gsub("\n", "")
-          )
-        end
-
-        context "when the name identifier format is specified" do
-          let(:saml_options) do
-            {
-              idp_metadata_url: idp_metadata_url,
-              sp_entity_id: sp_entity_id,
-              name_identifier_format: "urn:oasis:names:tc:SAML:2.0:nameid-format:transient"
-            }
-          end
-
-          it "uses the configured name identifier format" do
+        shared_examples "an OmniAuth strategy" do
+          it "applies the local options and the IdP metadata options" do
             expect(subject).to be_successful
 
             instance = last_request.env["omniauth.strategy"]
 
+            expect(instance.options[:sp_entity_id]).to eq(
+              "https://1.lvh.me/users/auth/msad/metadata"
+            )
+            expect(instance.options[:certificate]).to eq(certificate.to_pem)
+            expect(instance.options[:private_key]).to eq(private_key.to_pem)
+            expect(instance.options[:security]).to include(
+              "authn_requests_signed" => true,
+              "logout_requests_signed" => false,
+              "logout_responses_signed" => false,
+              "want_assertions_signed" => true,
+              "want_assertions_encrypted" => false,
+              "want_name_id" => false,
+              "metadata_signed" => false,
+              "embed_sign" => false,
+              "digest_method" => XMLSecurity::Document::SHA256,
+              "signature_method" => XMLSecurity::Document::RSA_SHA256,
+              "check_idp_cert_expiration" => false,
+              "check_sp_cert_expiration" => false
+            )
+
+            # Check the automatically set options
+            expect(instance.options[:assertion_consumer_service_url]).to eq(
+              "https://1.lvh.me/users/auth/msad/callback"
+            )
+            expect(instance.options[:sp_name_qualifier]).to eq(
+              "https://1.lvh.me/users/auth/msad/metadata"
+            )
+            expect(instance.options[:idp_name_qualifier]).to eq(
+              "https://sts.windows.net/987f6543-1e0d-12a3-45b6-789012c345de/"
+            )
+
+            # Check the most important metadata options
+            expect(instance.options[:idp_entity_id]).to eq(
+              "https://sts.windows.net/987f6543-1e0d-12a3-45b6-789012c345de/"
+            )
             expect(instance.options[:name_identifier_format]).to eq(
-              "urn:oasis:names:tc:SAML:2.0:nameid-format:transient"
+              "urn:oasis:names:tc:SAML:2.0:nameid-format:persistent"
+            )
+            expect(instance.options[:idp_slo_target_url]).to eq(
+              "https://login.microsoftonline.com/987f6543-1e0d-12a3-45b6-789012c345de/saml2"
+            )
+            expect(instance.options[:idp_sso_target_url]).to eq(
+              "https://login.microsoftonline.com/987f6543-1e0d-12a3-45b6-789012c345de/saml2"
+            )
+
+            idp_cert = File.read(file_fixture("idp.crt"))
+            expect(instance.options[:idp_cert]).to eq(
+              # Remove the comments and newlines from the cert
+              idp_cert.gsub(/-----[^\-]+-----/, "").gsub("\n", "")
             )
           end
+
+          context "when the name identifier format is specified" do
+            let(:saml_options) do
+              {
+                idp_metadata_file: idp_metadata_file,
+                idp_metadata_url: idp_metadata_url,
+                sp_entity_id: sp_entity_id,
+                name_identifier_format: "urn:oasis:names:tc:SAML:2.0:nameid-format:transient"
+              }
+            end
+
+            it "uses the configured name identifier format" do
+              expect(subject).to be_successful
+
+              instance = last_request.env["omniauth.strategy"]
+
+              expect(instance.options[:name_identifier_format]).to eq(
+                "urn:oasis:names:tc:SAML:2.0:nameid-format:transient"
+              )
+            end
+          end
+        end
+
+        it_behaves_like "an OmniAuth strategy"
+        it_behaves_like "an OmniAuth strategy" do
+          let(:idp_metadata_file) { file_fixture("idp_metadata.xml") }
+          let(:idp_metadata_url) { nil }
         end
       end
 
