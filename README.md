@@ -46,6 +46,10 @@ You need to set the following configuration options inside the initializer:
 
 - `:idp_metadata_url` - The metadata URL for the identity provider which is the
   federation server's metadata URL.
+  * If your ADFS server does not provide a public metadata URL, you can also
+    point to a local file with the `:idp_metadata_file` option (see below). When
+    using `:idp_metadata_file` it will get priority over `:idp_metadata_url`.
+    Only one of these can be used per tenant.
 - `:sp_entity_id` - The service provider entity ID, i.e. your applications
   entity ID used to identify the service at the Active Directory SAML identity
   provider.
@@ -188,6 +192,10 @@ need to configure the federation side to handle your requests.
 
 If you don't know the metadata URL, please ask it from the federation server
 administrator after you have sent your service provider (SP) metadata to them.
+If you don't have a public metadata URL, you can use the `:idp_metadata_file`
+option to point to a local metadata file on the Decidim server. Always prefer
+the public URL because it updates automatically if the server configurations are
+updated.
 
 ### Configuring Azure AD
 
@@ -326,6 +334,11 @@ ADFS server's metadata URL if you haven't configured it yet. The format of the
 URL should look similar to this:
 
 https://adfs.your-organization.org/FederationMetadata/2007-06/FederationMetadata.xml
+
+If your ADFS server is not configured to serve the metadata file publicly, you
+will need to manually download the metadata file from the server, store it on
+the Decidim server and then use the `:idp_metadata_file` option to point the
+module's tenant configurations to that file.
 
 #### Debugging the SAML responses
 
