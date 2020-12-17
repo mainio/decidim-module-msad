@@ -137,7 +137,7 @@ end
 # Second tenant
 Decidim::Msad.configure do |config|
   config.name = "otherad"
-  # => Configuration for the "msad_other" tenant (copy the sample config here)
+  # => Configuration for the "otherad" tenant (copy the sample config here)
 end
 ```
 
@@ -154,12 +154,26 @@ Please use fully distinct names for each tenant. Consider the following examples
 for further instructions:
 
 - **Correct**:
-  * First tenant: `config.name = "internal_msad"`
-  * Second tenant: `config.name = "external_msad"`
+  * First tenant: `config.name = "msad"`
+  * Second tenant: `config.name = "otherad"`
 - Incorrect:
   * ~~First tenant: `config.name = "msad"`~~
-  * ~~Second tenant: `config.name = "msad_external"`~~ (the first tenant's name
+  * ~~Second tenant: `config.name = "msad_other"`~~ (the first tenant's name
     would match with this string when compared from the beginning of the string)
+
+Once configured, please note that for the other tenant the authentication
+endpoint urls shown in this document need to be modified according to the
+tenant's name. By default, the tenant name for a single tenant is `msad` in
+which case the authentication URLs look as follows:
+
+`https://www.example.org/users/auth/msad/***`
+
+When you configure the tenant's name to something else than the default, these
+URLs will change accordingly. With the configuration example above, they would
+be as follows:
+
+- `https://www.example.org/users/auth/msad/metadata`
+- `https://www.example.org/users/auth/otherad/metadata`
 
 ## Configuring the federation server
 
