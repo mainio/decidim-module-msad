@@ -172,8 +172,8 @@ When you configure the tenant's name to something else than the default, these
 URLs will change accordingly. With the configuration example above, they would
 be as follows:
 
-- `https://www.example.org/users/auth/msad/metadata`
-- `https://www.example.org/users/auth/otherad/metadata`
+- `https://www.example.org/users/auth/msad/***`
+- `https://www.example.org/users/auth/otherad/***`
 
 ## Configuring the federation server
 
