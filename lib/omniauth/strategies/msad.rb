@@ -18,6 +18,9 @@ module OmniAuth
       # so they are not generally needed with AD based federations.
       option :request_attributes, []
 
+      # If you want to pass extra security configurations, use this option.
+      option :security, {}
+
       # Maps the SAML attributes to OmniAuth info schema:
       # https://github.com/omniauth/omniauth/wiki/Auth-Hash-Schema#schema-10-and-later
       option(
@@ -122,6 +125,11 @@ module OmniAuth
           digest_method: XMLSecurity::Document::SHA256,
           signature_method: XMLSecurity::Document::RSA_SHA256
         )
+        if options.certificate && options.private_key
+          settings[:security][:logout_requests_signed] = true
+          settings[:security][:logout_responses_signed] = true
+        end
+        settings[:security].merge!(options.security)
 
         # Add some extra information that is necessary for correctly formatted
         # logout requests.

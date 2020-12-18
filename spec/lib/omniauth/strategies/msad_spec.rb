@@ -33,9 +33,11 @@ module OmniAuth
           idp_metadata_url: idp_metadata_url,
           sp_entity_id: sp_entity_id,
           certificate: certificate.to_pem,
-          private_key: private_key.to_pem
+          private_key: private_key.to_pem,
+          security: security_options
         }
       end
+      let(:security_options) { {} }
       let(:idp_metadata_file) { nil }
       let(:idp_metadata_url) { "https://login.microsoftonline.com/987f6543-1e0d-12a3-45b6-789012c345de/federationmetadata/2007-06/federationmetadata.xml" }
       let(:sp_entity_id) { "https://1.lvh.me/users/auth/msad/metadata" }
@@ -61,8 +63,8 @@ module OmniAuth
             expect(instance.options[:private_key]).to eq(private_key.to_pem)
             expect(instance.options[:security]).to include(
               "authn_requests_signed" => true,
-              "logout_requests_signed" => false,
-              "logout_responses_signed" => false,
+              "logout_requests_signed" => true,
+              "logout_responses_signed" => true,
               "want_assertions_signed" => true,
               "want_assertions_encrypted" => false,
               "want_name_id" => false,
@@ -123,6 +125,37 @@ module OmniAuth
 
               expect(instance.options[:name_identifier_format]).to eq(
                 "urn:oasis:names:tc:SAML:2.0:nameid-format:transient"
+              )
+            end
+          end
+
+          context "when the security option is specified" do
+            # This config wouldn't make any sense but it is just to test that
+            # the configuration settings are changed to opposite than the
+            # default values.
+            let(:security_options) do
+              {
+                authn_requests_signed: false,
+                logout_requests_signed: false,
+                logout_responses_signed: false,
+                want_assertions_signed: false,
+                want_assertions_encrypted: true,
+                want_name_id: true
+              }
+            end
+
+            it "applies the security options according to the defined values" do
+              expect(subject).to be_successful
+
+              instance = last_request.env["omniauth.strategy"]
+
+              expect(instance.options[:security]).to include(
+                "authn_requests_signed" => false,
+                "logout_requests_signed" => false,
+                "logout_responses_signed" => false,
+                "want_assertions_signed" => false,
+                "want_assertions_encrypted" => true,
+                "want_name_id" => true
               )
             end
           end
