@@ -175,7 +175,7 @@ module Decidim
 
       def tenant
         @tenant ||= begin
-          matches = request.path.match(%r{^/users/auth/(msad)/.+})
+          matches = request.path.match(%r{^/users/auth/([^/]+)/.+})
           raise "Invalid MSAD tenant" unless matches
 
           name = matches[1]
