@@ -434,6 +434,27 @@ have gone through the previous "Authentication failed or cancelled". After this,
 check that your entity ID is correct in the custom rule and matches the entity
 ID you see in the metadata.
 
+#### Error: The authentication request was not handled within an allowed timeframe. Please try again.
+
+In case you see this error, it could be that your server's and the ADFS server's
+clocks are not perfectly in sync. You can try allowing clock drift for the
+module which will accept callback requests within this configured drift. To
+configure the clock drift, you can define the following "extra" configuration
+in the initializer:
+
+```ruby
+# config/initializers/msad.rb
+
+Decidim::Msad.configure do |config|
+  # ... keep the default configuration as is ...
+  # Add this extra configuration:
+  config.extra = {
+    # Define the allowed clock drift between your server and ADFS (in seconds)
+    allowed_clock_drift: 30
+  }
+end
+```
+
 #### Error on logout (ADFS): "An Error Occurred"
 
 In case sign in is working properly but sign out is not, it can be because of
