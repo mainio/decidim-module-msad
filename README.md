@@ -401,6 +401,10 @@ In the rule, replace `YOUR_ENTITY_ID_HERE` with the entity ID of your instance
 which should be `https://your-organization.org/users/auth/msad/metadata` with
 the default configurations.
 
+Also, you need to configure the email address to be sent as the NameID property
+as described before. Make sure the NameID passed in the requests is the user's
+email address.
+
 Alternatively, you could also try to configure a different NameID format from
 the ADFS side and specify the format for this module using the following
 configuration in the initializer:
