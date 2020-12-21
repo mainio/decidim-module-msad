@@ -38,6 +38,16 @@ module Decidim
       # The private key file for the application
       config_accessor :private_key_file
 
+      # The SLO requests to ADFS need to be signed in order for them to work
+      # properly. For ADFS, the sign out requests need to be signed which
+      # requires a certificate and private key to be defined for the tenant.
+      # If you are using ADFS and cannot configure a certificate and private
+      # key, you can disable the SP initiated sign out requests (SPSLO) by
+      # setting this configuration to `true`.
+      config_accessor :disable_spslo do
+        false
+      end
+
       # Defines how the session gets cleared when the OmniAuth strategy logs the
       # user out. This has been customized to preserve the flash messages and the
       # stored redirect location in the session after the session is destroyed.

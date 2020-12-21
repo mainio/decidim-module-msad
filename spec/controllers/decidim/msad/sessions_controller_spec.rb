@@ -37,12 +37,14 @@ module Decidim
         end
 
         context "when there is an active MSAD sign in" do
-          it "signs out the user through the MSAD SLO" do
+          before do
             # Generate a dummy session by requesting the home page.
             get "/"
             request.session["decidim-msad.signed_in"] = true
             request.session["decidim-msad.tenant"] = "msad"
+          end
 
+          it "signs out the user through the MSAD SLO" do
             post "/users/sign_out", env: {
               "rack.session" => request.session,
               "rack.session.options" => request.session.options
@@ -51,6 +53,42 @@ module Decidim
             redirect_path = CGI.escape("/users/slo_callback?success=1")
             expect(response).to redirect_to("/users/auth/msad/spslo?RelayState=#{redirect_path}")
             expect(controller.current_user).to be_nil
+          end
+
+          context "with an unknown tenant" do
+            before do
+              request.session["decidim-msad.tenant"] = "foo"
+            end
+
+            it "raises a StandardError" do
+              expect do
+                post "/users/sign_out", env: {
+                  "rack.session" => request.session,
+                  "rack.session.options" => request.session.options
+                }
+              end.to raise_error(
+                StandardError,
+                "Unkown MSAD tenant: foo"
+              )
+            end
+          end
+
+          context "with disable_spslo enabled" do
+            let(:tenant) { Decidim::Msad.tenants.first }
+
+            before do
+              allow(tenant.config).to receive(:disable_spslo).and_return(true)
+            end
+
+            it "signs out the user and redirects to the home path" do
+              post "/users/sign_out", env: {
+                "rack.session" => request.session,
+                "rack.session.options" => request.session.options
+              }
+
+              expect(response).to redirect_to("/")
+              expect(controller.current_user).to be_nil
+            end
           end
         end
       end
