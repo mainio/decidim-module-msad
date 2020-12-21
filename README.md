@@ -79,6 +79,14 @@ Optionally you can also configure the module with the following options:
 - `:private_key_file` - Path to the local private key (corresponding to the
   certificate). Will be used to decrypt messages coming from the federation
   server. As the `:certificate_file` option, this is also optional.
+- `:disable_spslo` - A boolean indicating if the service provider initiated SAML
+  logout (SPSLO) should be disabled. ADFS supports SAML sign out only when the
+  sign out requests are signed which requires configuring a certificate and a
+  private key for the ADFS tenant. For Azure AD, this works by default and does
+  not require any extra configuration. By default, this configuration is set to
+  `false` assuming you want to enable the SAML sign out requests to Azure AD or
+  ADFS when the user signs out of Decidim. In some circumstances you might not
+  want the user to perform a sign out request to the AD federation server.
 - `:metadata_attributes` - Defines the SAML attributes that will be stored in
   the user's associated authorization record's `metadata` field in Decidim.
   These are read from the SAML authentication response and stored once the user
@@ -425,6 +433,41 @@ In case you see an "Invalid ticket" error durign your login, make sure that you
 have gone through the previous "Authentication failed or cancelled". After this,
 check that your entity ID is correct in the custom rule and matches the entity
 ID you see in the metadata.
+
+#### Error on logout (ADFS): "An Error Occurred"
+
+In case sign in is working properly but sign out is not, it can be because of
+multiple reasons:
+
+- ADFS requires the SAML sign out requests to be signed which is only possible
+  when you have configured the certificate and private key for the tenant. If
+  you don't do this, SP initiated sign out requests are not possible.
+- The NameID format might be incorrect during the sign out request. If this
+  happens, you can try different formats using the `configs.extra` options (in
+  particular, the `name_identifier_format` option explained in the
+  authentication failure error).
+  * The NameID format needs to match what ADFS is expecting during the sign out
+    request and what is used to sign the user in. Otherwise, this module will
+    use the first NameID format available in the metadata which might not be the
+    correct one.
+
+If you cannot configure the certificate and private key, you can disable the
+sign out requests completely using the following configuration option:
+
+```ruby
+# config/initializers/msad.rb
+
+Decidim::Msad.configure do |config|
+  # ... keep the default configuration as is ...
+  # Add this extra configuration:
+  config.disable_spslo = true
+end
+```
+
+Note that when the SPSLO requests are disabled, the user's session will be left
+open on the ADFS server. In some circumstances this is desired as the user's
+browser could be configured to automatically sign the user in with ADFS in which
+case the sign out request to ADFS would have no effect.
 
 ## Usage
 
