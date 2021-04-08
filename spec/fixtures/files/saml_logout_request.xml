@@ -4,7 +4,7 @@
     ID='_123456ab-1234-1a2b-cd3e-1a2b34567890' IssueInstant='2020-09-02T17:19:33Z' Version='2.0'
     xmlns:saml='urn:oasis:names:tc:SAML:2.0:assertion'
     xmlns:samlp='urn:oasis:names:tc:SAML:2.0:protocol'>
-    <saml:Issuer>https://1.lvh.me/users/auth/msad/metadata</saml:Issuer>
+    <saml:Issuer>https://sts.windows.net/987f6543-1e0d-12a3-45b6-789012c345de/</saml:Issuer>
     <saml:NameID NameQualifier='https://sts.windows.net/987f6543-1e0d-12a3-45b6-789012c345de/'
         SPNameQualifier='https://1.lvh.me/users/auth/msad/metadata'>mmeikalainen.onmicrosoft.com#EXT#@example.onmicrosoft.com</saml:NameID>
     <samlp:SessionIndex>_111a1aaa-1111-11a1-a111-11a111111a11</samlp:SessionIndex>
