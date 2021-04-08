@@ -94,10 +94,10 @@ module OmniAuth
             expect(instance.options[:name_identifier_format]).to eq(
               "urn:oasis:names:tc:SAML:2.0:nameid-format:persistent"
             )
-            expect(instance.options[:idp_slo_target_url]).to eq(
+            expect(instance.options[:idp_slo_service_url]).to eq(
               "https://login.microsoftonline.com/987f6543-1e0d-12a3-45b6-789012c345de/saml2"
             )
-            expect(instance.options[:idp_sso_target_url]).to eq(
+            expect(instance.options[:idp_sso_service_url]).to eq(
               "https://login.microsoftonline.com/987f6543-1e0d-12a3-45b6-789012c345de/saml2"
             )
 
