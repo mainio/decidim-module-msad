@@ -183,7 +183,7 @@ module OmniAuth
       # End the local user session BEFORE sending the logout request to the
       # identity provider.
       def other_phase_for_spslo
-        return super if options.idp_slo_service_url.nil?
+        return super unless options.idp_slo_service_url
 
         with_settings do |settings|
           # Some session variables are needed when generating the logout request
