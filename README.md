@@ -1,6 +1,6 @@
 # Decidim::Msad - Integrate Decidim to Microsoft Active Directory (AD)
 
-[![Build Status](https://travis-ci.com/mainio/decidim-module-msad.svg?branch=master)](https://travis-ci.com/mainio/decidim-module-msad)
+[![Build Status](https://github.com/mainio/decidim-module-msad/actions/workflows/ci_msad.yml/badge.svg)](https://github.com/mainio/decidim-module-msad/actions)
 [![codecov](https://codecov.io/gh/mainio/decidim-module-msad/branch/master/graph/badge.svg)](https://codecov.io/gh/mainio/decidim-module-msad)
 [![Crowdin](https://badges.crowdin.net/decidim-msad/localized.svg)](https://crowdin.com/project/decidim-msad)
 
