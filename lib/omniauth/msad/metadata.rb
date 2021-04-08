@@ -3,7 +3,10 @@
 module OmniAuth
   module MSAD
     class Metadata < OneLogin::RubySaml::Metadata
-      def generate(settings, pretty_print = false)
+      # rubocop:disable Style/OptionalBooleanParameter
+      # NOTE: Do not change the method signature from the original which is why
+      #       Rubocop is disabled.
+      def generate(settings, pretty_print = false, _valid_until = nil, _cache_duration = nil)
         metadata_signed = settings.security.delete(:metadata_signed)
         settings.security[:metadata_signed] = false
 
@@ -16,6 +19,7 @@ module OmniAuth
 
         meta_doc.to_s
       end
+      # rubocop:enable Style/OptionalBooleanParameter
 
       private
 

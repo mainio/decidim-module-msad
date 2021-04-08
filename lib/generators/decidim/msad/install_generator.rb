@@ -63,7 +63,7 @@ module Decidim
 
             @empty_line_count = 0
             File.readlines(filepath).each do |line|
-              if line =~ /^$/
+              if line.match?(/^$/)
                 @empty_line_count += 1
                 next
               else
@@ -83,14 +83,14 @@ module Decidim
           attr_accessor :filepath, :empty_line_count, :inside_config, :inside_omniauth, :config_branch
 
           def handle_line(line)
-            if inside_config && line =~ /^  omniauth:/
+            if inside_config && line.match?(/^  omniauth:/)
               self.inside_omniauth = true
-            elsif inside_omniauth && (line =~ /^(  )?[a-z]+/ || line =~ /^#.*/)
+            elsif inside_omniauth && (line.match?(/^(  )?[a-z]+/) || line.match?(/^#.*/))
               inject_msad_config
               self.inside_omniauth = false
             end
 
-            return unless line =~ /^[a-z]+/
+            return unless line.match?(/^[a-z]+/)
 
             # A new root configuration block starts
             self.inside_config = false

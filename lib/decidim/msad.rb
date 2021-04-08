@@ -13,50 +13,50 @@ module Decidim
   module Msad
     autoload :Tenant, "decidim/msad/tenant"
 
-    def self.tenants
-      @tenants ||= []
-    end
+    class << self
+      def tenants
+        @tenants ||= []
+      end
 
-    def self.test!
-      @test = true
-    end
+      def test!
+        @test = true
+      end
 
-    def self.configure(&block)
-      tenant = Decidim::Msad::Tenant.new(&block)
-      self.tenants.each do |existing|
-        if tenant.name == existing.name
+      def configure(&block)
+        tenant = Decidim::Msad::Tenant.new(&block)
+        tenants.each do |existing|
+          if tenant.name == existing.name
+            raise(
+              TenantNameTooSimilar,
+              "Please define an individual name for the MSAD tenant. The name \"#{tenant.name}\" is already in use."
+            )
+          end
+
+          match = tenant.name =~ /^#{existing.name}/
+          match ||= existing.name =~ /^#{tenant.name}/
+          next unless match
+
           raise(
             TenantNameTooSimilar,
-            "Please define an individual name for the MSAD tenant. The name \"#{tenant.name}\" is already in use."
+            "MSAD tenant name \"#{tenant.name}\" is too similar with: #{existing.name}"
           )
         end
 
-        match = tenant.name =~ /^#{existing.name}/
-        match = existing.name =~ /^#{tenant.name}/ unless match
-        next unless match
-
-        raise(
-          TenantNameTooSimilar,
-          "MSAD tenant name \"#{tenant.name}\" is too similar with: #{existing.name}"
-        )
+        tenants << tenant
       end
 
-      self.tenants << tenant
-    end
+      def setup!
+        raise "MSAD module is already initialized!" if initialized?
 
-    def self.setup!
-      raise "MSAD module is already initialized!" if initialized?
-
-      @initialized = true
-      self.tenants.each do |tenant|
-        tenant.setup!
+        @initialized = true
+        tenants.each(&:setup!)
       end
-    end
 
-    private
+      private
 
-    def self.initialized?
-      @initialized
+      def initialized?
+        @initialized
+      end
     end
 
     class TenantNameTooSimilar < StandardError; end

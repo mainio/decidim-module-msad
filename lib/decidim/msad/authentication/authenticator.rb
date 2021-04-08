@@ -15,11 +15,8 @@ module Decidim
 
         def verified_email
           @verified_email ||= begin
-            if oauth_data[:info][:email]
-              oauth_data[:info][:email]
-            else
+            oauth_data[:info][:email] ||
               tenant.auto_email_for(organization, person_identifier_digest)
-            end
           end
         end
 
@@ -162,7 +159,7 @@ module Decidim
             user.email = verified_email
             user.skip_reconfirmation!
           end
-          user.newsletter_notifications_at = Time.now if user_newsletter_subscription?(user)
+          user.newsletter_notifications_at = Time.zone.now if user_newsletter_subscription?(user)
 
           user.save! if user_changed
         end

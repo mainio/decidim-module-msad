@@ -140,7 +140,7 @@ module Decidim
       end
 
       def name=(name)
-        unless name =~ /^[a-z_]+$/
+        unless name.match?(/^[a-z_]+$/)
           raise(
             InvalidTenantName,
             "The MSAD tenant name can only contain lowercase letters and underscores."
@@ -206,7 +206,7 @@ module Decidim
         # up in an ActionController::InvalidAuthenticityToken exception.
         devise_failure_app = OmniAuth.config.on_failure
         OmniAuth.config.on_failure = proc do |env|
-          if env["PATH_INFO"] =~ %r{^/users/auth/#{config.name}($|/.+)}
+          if env["PATH_INFO"] && env["PATH_INFO"].match?(%r{^/users/auth/#{config.name}($|/.+)})
             env["devise.mapping"] = ::Devise.mappings[:user]
             Decidim::Msad::OmniauthCallbacksController.action(
               :failure
@@ -276,10 +276,7 @@ module Decidim
       # Used to determine the default service provider entity ID in case not
       # specifically set by the `sp_entity_id` configuration option.
       def application_host
-        conf = Rails.application.config
-        url_options = conf.action_controller.default_url_options
-        url_options = conf.action_mailer.default_url_options if !url_options || !url_options[:host]
-        url_options ||= {}
+        url_options = application_url_options
 
         # Note that at least Azure AD requires all callback URLs to be HTTPS, so
         # we'll default to that.
@@ -293,9 +290,16 @@ module Decidim
           port ||= 3000
         end
 
-        return "#{protocol}://#{host}:#{port}" if port && ![80, 443].include?(port.to_i)
+        return "#{protocol}://#{host}:#{port}" if port && [80, 443].exclude?(port.to_i)
 
         "#{protocol}://#{host}"
+      end
+
+      def application_url_options
+        conf = Rails.application.config
+        url_options = conf.action_controller.default_url_options
+        url_options = conf.action_mailer.default_url_options if !url_options || !url_options[:host]
+        url_options || {}
       end
     end
   end

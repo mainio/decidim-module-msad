@@ -45,7 +45,7 @@ module OmniAuth
         # defined because otherwise it could be the principal name which is not
         # a user readable name as expected by OmniAuth.
         name = "#{info_hash["first_name"]} #{info_hash["last_name"]}".strip
-        info_hash["name"] = name unless name.blank?
+        info_hash["name"] = name if name.present?
 
         info_hash
       end
@@ -92,29 +92,31 @@ module OmniAuth
 
       private
 
-      def msad_options
+      def msad_metadata_options
         idp_metadata_parser = OneLogin::RubySaml::IdpMetadataParser.new
 
-        # Returns OneLogin::RubySaml::Settings prepopulated with idp metadata
-        settings = begin
-          if options.idp_metadata_file
-            idp_metadata_parser.parse_to_hash(
-              File.read(options.idp_metadata_file)
-            )
-          else
-            begin
-              idp_metadata_parser.parse_remote_to_hash(
-                options.idp_metadata_url,
-                true
-              )
-            rescue ::URI::InvalidURIError
-              # Allow the OmniAuth strategy to be configured with empty settings
-              # in order to provide the metadata URL even when the authentication
-              # endpoint is not configured.
-              {}
-            end
-          end
+        if options.idp_metadata_file
+          return idp_metadata_parser.parse_to_hash(
+            File.read(options.idp_metadata_file)
+          )
         end
+
+        begin
+          idp_metadata_parser.parse_remote_to_hash(
+            options.idp_metadata_url,
+            true
+          )
+        rescue ::URI::InvalidURIError
+          # Allow the OmniAuth strategy to be configured with empty settings
+          # in order to provide the metadata URL even when the authentication
+          # endpoint is not configured.
+          {}
+        end
+      end
+
+      def msad_options
+        # Returns OneLogin::RubySaml::Settings prepopulated with idp metadata
+        settings = msad_metadata_options
 
         if settings[:idp_slo_response_service_url].nil? && settings[:idp_slo_target_url].nil?
           # Mitigation after ruby-saml update to 1.12.x. This gem has been
@@ -145,7 +147,7 @@ module OmniAuth
         # logout requests.
         settings[:idp_name_qualifier] = settings[:idp_entity_id]
 
-        if !options.name_identifier_format.blank?
+        if options.name_identifier_format.present?
           # If the name identifier format has been configured, use that instead
           # of the IdP metadata value. Otherwise the first format available in
           # the IdP metadata would be used.
@@ -203,7 +205,8 @@ module OmniAuth
         # Ensure that we are only using the relay states to redirect the user
         # within the current website. This forces the relay state to always
         # start with a single forward slash character (/).
-        return "/" unless state =~ %r{^/[^/].*}
+        return "/" unless state
+        return "/" unless state.match?(%r{^/[^/].*})
 
         state
       end

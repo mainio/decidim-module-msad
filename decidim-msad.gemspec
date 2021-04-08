@@ -9,6 +9,7 @@ Gem::Specification.new do |spec|
   spec.version = Decidim::Msad::VERSION
   spec.authors = ["Antti Hukkanen"]
   spec.email = ["antti.hukkanen@mainiotech.fi"]
+  spec.required_ruby_version = ">= 2.7"
 
   spec.summary = "Provides possibility to bind Microsoft Active Directory (AD) authentication provider to Decidim."
   spec.description = "Adds Microsoft Active Directory (AD) authentication provider to Decidim."
