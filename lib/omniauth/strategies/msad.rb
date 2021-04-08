@@ -116,6 +116,16 @@ module OmniAuth
           end
         end
 
+        if settings[:idp_slo_response_service_url].nil? && settings[:idp_slo_target_url].nil?
+          # Mitigation after ruby-saml update to 1.12.x. This gem has been
+          # originally developed relying on the `:idp_slo_target_url` settings
+          # which was removed from the newer versions. The SLO requests won't
+          # work unless `:idp_slo_response_service_url` is defined in the
+          # metadata through the `ResponseLocation` attribute in the
+          # `<SingleLogoutService />` node.
+          settings[:idp_slo_target_url] ||= settings[:idp_slo_service_url]
+        end
+
         # Define the security settings as there are some defaults that need to be
         # modified
         security_defaults = OneLogin::RubySaml::Settings::DEFAULTS[:security]
@@ -173,7 +183,7 @@ module OmniAuth
       # End the local user session BEFORE sending the logout request to the
       # identity provider.
       def other_phase_for_spslo
-        return super unless options.idp_slo_target_url
+        return super if options.idp_slo_service_url.nil?
 
         with_settings do |settings|
           # Some session variables are needed when generating the logout request
