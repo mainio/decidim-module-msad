@@ -71,6 +71,11 @@ Rails/OutputSafety:
 Rails/Pluck:
   Enabled: false
 
+Rails/HttpPositionalArguments:
+  Include:
+    - "app/controllers/**"
+    - "spec/controllers/**"
+
 Rails/RakeEnvironment:
   Enabled: false
 

@@ -1274,6 +1274,10 @@ RSpec/LeakyConstantDeclaration:
 RSpec/DescribedClass:
   Enabled: false
 
+RSpec/SubjectStub:
+  Exclude:
+    - spec/shared/tenant_examples.rb
+
 # This is the default configuration file.
 
 Faker/DeprecatedArguments:
