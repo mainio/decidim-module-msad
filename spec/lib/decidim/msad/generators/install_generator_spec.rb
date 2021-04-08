@@ -94,8 +94,10 @@ module Decidim
           end
 
           it "enables the MSAD authentication by modifying the secrets.yml file" do
-            expect(File).to receive(:read).and_return(secrets_yml)
-            expect(File).to receive(:readlines).and_return(secrets_yml.lines)
+            allow(File).to receive(:read).and_return(secrets_yml)
+            expect(File).to receive(:read)
+            allow(File).to receive(:readlines).and_return(secrets_yml.lines)
+            expect(File).to receive(:readlines)
             expect(File).to receive(:open).with(anything, "w") do |&block|
               file = double
               expect(file).to receive(:puts).with(secrets_yml_modified)
@@ -112,9 +114,10 @@ module Decidim
 
           context "with MSAD already enabled" do
             it "reports identical status" do
-              expect(YAML).to receive(:safe_load).and_return(
+              allow(YAML).to receive(:safe_load).and_return(
                 "default" => { "omniauth" => { "msad" => {} } }
               )
+              expect(YAML).to receive(:safe_load)
               expect(subject).to receive(:say_status).with(
                 :identical,
                 "config/secrets.yml",

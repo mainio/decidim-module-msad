@@ -17,8 +17,10 @@ shared_examples "an MSAD tenant" do |name|
     end
 
     it "configures the MSAD omniauth strategy for Devise" do
-      expect(subject).to receive(:idp_metadata_file).and_return(metadata_file)
-      expect(subject).to receive(:idp_metadata_url).and_return(metadata_url)
+      allow(subject).to receive(:idp_metadata_file).and_return(metadata_file)
+      expect(subject).to receive(:idp_metadata_file)
+      allow(subject).to receive(:idp_metadata_url).and_return(metadata_url)
+      expect(subject).to receive(:idp_metadata_url)
 
       expect(::Devise).to receive(:setup) do |&block|
         config = double
@@ -105,9 +107,10 @@ shared_examples "an MSAD tenant" do |name|
     describe "#sp_entity_id" do
       it "returns the correct path by default" do
         allow(config).to receive(:sp_entity_id).and_return(nil)
-        expect(subject).to receive(:application_host).and_return(
+        allow(subject).to receive(:application_host).and_return(
           "https://www.example.org"
         )
+        expect(subject).to receive(:application_host)
 
         expect(subject.sp_entity_id).to eq(
           "https://www.example.org/users/auth/#{name}/metadata"

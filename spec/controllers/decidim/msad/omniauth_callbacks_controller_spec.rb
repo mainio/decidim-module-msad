@@ -420,7 +420,7 @@ module Decidim
       end
 
       def generate_saml_response(attributes = {})
-        saml_response_from_file("saml_response_blank.xml", true) do |doc|
+        saml_response_from_file("saml_response_blank.xml", sign: true) do |doc|
           root_element = doc.root
           statements_node = root_element.at_xpath(
             "//saml2:Assertion//saml2:AttributeStatement",
@@ -447,7 +447,7 @@ module Decidim
         end
       end
 
-      def saml_response_from_file(file, sign = false)
+      def saml_response_from_file(file, sign: false)
         filepath = file_fixture(file)
         file_io = IO.read(filepath)
         doc = Nokogiri::XML::Document.parse(file_io)

@@ -26,7 +26,8 @@ module Decidim
 
       it "mounts the routes to the core engine" do
         routes = double
-        expect(Decidim::Core::Engine).to receive(:routes).and_return(routes)
+        allow(Decidim::Core::Engine).to receive(:routes).and_return(routes)
+        expect(Decidim::Core::Engine).to receive(:routes)
         expect(routes).to receive(:prepend) do |&block|
           context = double
           expect(context).to receive(:mount).with(described_class => "/")
@@ -108,13 +109,14 @@ module Decidim
         expect(OmniAuth.config).to receive(:on_failure=) do |proc|
           env = double
           action = double
-          expect(env).to receive(:[]).with("PATH_INFO").and_return(
+          expect(env).to receive(:[]).with("PATH_INFO").twice.and_return(
             "/users/auth/msad"
           )
           expect(env).to receive(:[]=).with("devise.mapping", ::Devise.mappings[:user])
-          expect(Decidim::Msad::OmniauthCallbacksController).to receive(
+          allow(Decidim::Msad::OmniauthCallbacksController).to receive(
             :action
           ).with(:failure).and_return(action)
+          expect(Decidim::Msad::OmniauthCallbacksController).to receive(:action)
           expect(action).to receive(:call).with(env)
 
           proc.call(env)
@@ -122,13 +124,14 @@ module Decidim
         expect(OmniAuth.config).to receive(:on_failure=) do |proc|
           env = double
           action = double
-          expect(env).to receive(:[]).with("PATH_INFO").and_return(
+          expect(env).to receive(:[]).with("PATH_INFO").twice.and_return(
             "/users/auth/other"
           )
           expect(env).to receive(:[]=).with("devise.mapping", ::Devise.mappings[:user])
-          expect(Decidim::Msad::OmniauthCallbacksController).to receive(
+          allow(Decidim::Msad::OmniauthCallbacksController).to receive(
             :action
           ).with(:failure).and_return(action)
+          expect(Decidim::Msad::OmniauthCallbacksController).to receive(:action)
           expect(action).to receive(:call).with(env)
 
           proc.call(env)
@@ -144,7 +147,7 @@ module Decidim
         expect(OmniAuth.config).to receive(:on_failure).twice.and_return(failure_app)
         expect(OmniAuth.config).to receive(:on_failure=).twice do |proc|
           env = double
-          expect(env).to receive(:[]).with("PATH_INFO").and_return(
+          expect(env).to receive(:[]).with("PATH_INFO").twice.and_return(
             "/something/else"
           )
           expect(failure_app).to receive(:call).with(env)

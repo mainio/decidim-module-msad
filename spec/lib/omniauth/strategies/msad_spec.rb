@@ -104,7 +104,9 @@ module OmniAuth
             idp_cert = File.read(file_fixture("idp.crt"))
             expect(instance.options[:idp_cert]).to eq(
               # Remove the comments and newlines from the cert
+              # rubocop:disable Performance/StringReplacement
               idp_cert.gsub(/-----[^\-]+-----/, "").gsub("\n", "")
+              # rubocop:enable Performance/StringReplacement
             )
           end
 

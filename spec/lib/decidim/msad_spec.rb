@@ -83,9 +83,7 @@ module Decidim
     describe ".setup!" do
       it "calls the setup method for all tenants" do
         allow(described_class).to receive(:initialized?).and_return(false)
-        described_class.tenants.each do |tenant|
-          expect(tenant).to receive(:setup!)
-        end
+        expect(described_class.tenants).to all(receive(:setup!))
         described_class.setup!
       end
     end
