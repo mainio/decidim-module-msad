@@ -42,7 +42,7 @@ module Decidim
           )
           return redirect_to(
             stored_location_for(resource || :user) ||
-            decidim_verifications.authorizations_path
+            decidim.root_path
           )
         end
 
@@ -125,6 +125,11 @@ module Decidim
         end
 
         super
+      end
+
+      # Disable authorization redirect for the first login
+      def first_login_and_not_authorized?(_user)
+        false
       end
 
       private
