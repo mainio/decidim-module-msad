@@ -239,6 +239,33 @@ module Decidim
               "employee_number" => "ABC123"
             )
           end
+
+          it "redirects to the root path" do
+            omniauth_callback_get
+
+            expect(response).to redirect_to("/")
+          end
+
+          context "when the session has a pending redirect" do
+            let(:after_sign_in_path) { "/processes" }
+
+            before do
+              # Do a mock request in order to create a session
+              get "/"
+              request.session["user_return_to"] = after_sign_in_path
+            end
+
+            it "redirects to the stored location" do
+              omniauth_callback_get(
+                env: {
+                  "rack.session" => request.session,
+                  "rack.session.options" => request.session.options
+                }
+              )
+
+              expect(response).to redirect_to("/processes")
+            end
+          end
         end
 
         context "when the user is already signed in and authorized" do
