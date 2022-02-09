@@ -10,8 +10,7 @@ base_path = ""
 base_path = "../" if File.basename(__dir__) == "development_app"
 require_relative "#{base_path}lib/decidim/msad/version"
 
-# DECIDIM_VERSION = Decidim::Msad::DECIDIM_VERSION
-DECIDIM_VERSION = { github: "decidim/decidim", branch: "develop" }.freeze
+DECIDIM_VERSION = Decidim::Msad::DECIDIM_VERSION
 
 gem "decidim", DECIDIM_VERSION
 gem "decidim-msad", path: "."
@@ -42,3 +41,5 @@ end
 group :test do
   gem "codecov", require: false
 end
+
+gem "rails", "~> 6.0.4"
