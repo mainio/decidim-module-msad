@@ -19,6 +19,10 @@ cs:
             success: Byli jste úspěšně autorizováni prostřednictvím služby Active Directory
           destroy:
             success: Autorizace byla úspěšně obnovena.
+          new:
+            continue: Continue without waiting
+            description: Please wait a moment, you will be redirected to the identification service...
+            title: Redirection
     system:
       organizations:
         omniauth_settings:
