@@ -15,7 +15,7 @@ DECIDIM_VERSION = Decidim::Msad::DECIDIM_VERSION
 gem "decidim", DECIDIM_VERSION
 gem "decidim-msad", path: "."
 
-gem "omniauth-saml", "~> 1.10.2"
+gem "omniauth-saml", "~> 2.0"
 
 gem "bootsnap", "~> 1.4"
 gem "puma", ">= 5.0.0"
