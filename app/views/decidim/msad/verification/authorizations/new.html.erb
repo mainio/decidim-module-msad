@@ -1,0 +1,19 @@
+<div class="wrapper">
+  <div class="row collapse">
+    <div class="row collapse">
+      <div class="columns large-8 large-centered text-center page-title">
+        <h1><%= t(".title") %></h1>
+        <p><%= t(".description") %></p>
+
+        <%= link_to decidim.user_msad_omniauth_authorize_path, id: "identify-button", class: "button large primary", method: :post do %>
+          <%= t(".continue") %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+var btn = document.getElementById("identify-button");
+btn.click();
+</script>

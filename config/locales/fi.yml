@@ -19,6 +19,10 @@ fi:
             success: Sinut on onnistuneesti tunnistettu Active Directory -palvelun avulla
           destroy:
             success: Varmennus tyhjennetty onnistuneesti.
+          new:
+            continue: Jatka odottamatta
+            description: Odota hetki, sinut ohjataan tunnistautumiseen...
+            title: Ohjaus
     system:
       organizations:
         omniauth_settings:

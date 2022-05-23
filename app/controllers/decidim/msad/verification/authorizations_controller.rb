@@ -11,7 +11,8 @@ module Decidim
           # re-authorizations not to work as the authorization already exists.
           # In case the user wants to re-authorize themselves, they can just
           # hit this endpoint again.
-          redirect_to decidim.user_msad_omniauth_authorize_path
+          # The redirection happens in the view as it needs to be a POST
+          # request.
         end
       end
     end

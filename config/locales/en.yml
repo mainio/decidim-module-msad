@@ -20,6 +20,10 @@ en:
             success: You have been successfully authorized through Active Directory
           destroy:
             success: Authorization sucessfully reset.
+          new:
+            continue: Continue without waiting
+            description: Please wait a moment, you will be redirected to the identification service...
+            title: Redirection
     system:
       organizations:
         omniauth_settings:

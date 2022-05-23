@@ -8,6 +8,8 @@ module Decidim
       describe AuthorizationsController, type: :controller do
         routes { Decidim::Msad::Verification::Engine.routes }
 
+        render_views
+
         let(:user) { create(:user, :confirmed) }
 
         before do
@@ -18,7 +20,9 @@ module Decidim
         describe "GET new" do
           it "redirects the user" do
             get :new
-            expect(response).to redirect_to("/users/auth/msad")
+            expect(response).to render_template(:new)
+            expect(response.body).to include("Redirection")
+            expect(response.body).to include(%(href="/users/auth/msad"))
           end
         end
       end
