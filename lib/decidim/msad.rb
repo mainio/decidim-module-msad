@@ -3,6 +3,9 @@
 require "omniauth"
 require "omniauth/strategies/msad"
 
+# Make sure the omniauth methods work after OmniAuth 2.0+
+require "omniauth/rails_csrf_protection"
+
 require_relative "msad/version"
 require_relative "msad/engine"
 require_relative "msad/authentication"
