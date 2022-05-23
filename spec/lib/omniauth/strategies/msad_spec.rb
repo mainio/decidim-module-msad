@@ -44,7 +44,8 @@ module OmniAuth
       let(:strategy) { [described_class, saml_options] }
 
       before do
-        OmniAuth.config.full_host = "https://1.lvh.me"
+        allow(OmniAuth.config).to receive(:full_host).and_return("https://1.lvh.me")
+        allow(OmniAuth.config).to receive(:request_validation_phase).and_return(proc {})
       end
 
       describe "#initialize" do
@@ -170,8 +171,8 @@ module OmniAuth
         end
       end
 
-      describe "GET /users/auth/msad" do
-        subject { get "/users/auth/msad" }
+      describe "POST /users/auth/msad" do
+        subject { post "/users/auth/msad" }
 
         it "signs the request" do
           expect(subject).to be_redirect
