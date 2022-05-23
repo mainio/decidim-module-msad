@@ -481,7 +481,7 @@ module Decidim
           request_args[:env] = env if env
 
           # Call the endpoint with the SAML response
-          get "/users/auth/msad/callback", **request_args
+          post "/users/auth/msad/callback", **request_args
         end
       end
 
