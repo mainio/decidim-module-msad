@@ -11,16 +11,14 @@ shared_examples "an MSAD tenant" do |name|
     let(:metadata_file) { double }
     let(:metadata_url) { double }
 
-    it "calls setup_routes!" do
-      expect(subject).to receive(:setup_routes!)
+    it "configures the routes" do
+      expect(Decidim::Msad::Engine).to receive(:routes)
       subject.setup!
     end
 
     it "configures the MSAD omniauth strategy for Devise" do
-      allow(subject).to receive(:idp_metadata_file).and_return(metadata_file)
-      expect(subject).to receive(:idp_metadata_file)
-      allow(subject).to receive(:idp_metadata_url).and_return(metadata_url)
-      expect(subject).to receive(:idp_metadata_url)
+      subject.idp_metadata_file = metadata_file
+      subject.idp_metadata_url = metadata_url
 
       expect(::Devise).to receive(:setup) do |&block|
         config = double
@@ -97,20 +95,12 @@ shared_examples "an MSAD tenant" do |name|
   end
 
   context "with mocked configuration" do
-    let(:config) { double }
-
-    before do
-      allow(subject).to receive(:config).and_return(config)
-      allow(config).to receive(:name).and_return(name)
-    end
-
     describe "#sp_entity_id" do
       it "returns the correct path by default" do
-        allow(config).to receive(:sp_entity_id).and_return(nil)
-        allow(subject).to receive(:application_host).and_return(
-          "https://www.example.org"
+        allow(Rails.application.config.action_controller).to receive(:default_url_options).and_return(
+          host: "www.example.org",
+          protocol: "https"
         )
-        expect(subject).to receive(:application_host)
 
         expect(subject.sp_entity_id).to eq(
           "https://www.example.org/users/auth/#{name}/metadata"
@@ -118,12 +108,8 @@ shared_examples "an MSAD tenant" do |name|
       end
 
       context "when configured through module configuration" do
-        let(:sp_entity_id) { double }
-
         it "returns what is set by the module configuration" do
-          allow(config).to receive(:sp_entity_id).and_return(sp_entity_id)
-
-          expect(subject.sp_entity_id).to eq(sp_entity_id)
+          expect(subject.sp_entity_id).to eq("https://localhost:3000/users/auth/#{name}/metadata")
         end
       end
     end
@@ -132,7 +118,7 @@ shared_examples "an MSAD tenant" do |name|
       it "returns the certificate file content when configured with a file" do
         file = double
         contents = double
-        allow(subject).to receive(:certificate_file).and_return(file)
+        subject.certificate_file = file
         allow(File).to receive(:read).with(file).and_return(contents)
 
         expect(subject.certificate).to eq(contents)
@@ -142,9 +128,7 @@ shared_examples "an MSAD tenant" do |name|
         let(:certificate) { double }
 
         it "returns what is set by the module configuration" do
-          allow(subject).to receive(:certificate_file).and_return(nil)
-          allow(config).to receive(:certificate).and_return(certificate)
-
+          subject.config.certificate = certificate
           expect(subject.certificate).to eq(certificate)
         end
       end
@@ -154,7 +138,7 @@ shared_examples "an MSAD tenant" do |name|
       it "returns the private key file content when configured with a file" do
         file = double
         contents = double
-        allow(subject).to receive(:private_key_file).and_return(file)
+        subject.private_key_file = file
         allow(File).to receive(:read).with(file).and_return(contents)
 
         expect(subject.private_key).to eq(contents)
@@ -164,9 +148,7 @@ shared_examples "an MSAD tenant" do |name|
         let(:private_key) { double }
 
         it "returns what is set by the module configuration" do
-          allow(subject).to receive(:private_key_file).and_return(nil)
-          allow(config).to receive(:private_key).and_return(private_key)
-
+          subject.config.private_key = private_key
           expect(subject.private_key).to eq(private_key)
         end
       end
@@ -183,14 +165,14 @@ shared_examples "an MSAD tenant" do |name|
       let(:extra) { { extra1: "abc", extra2: 123 } }
 
       it "returns the expected omniauth configuration hash" do
-        allow(subject).to receive(:idp_metadata_file).and_return(idp_metadata_file)
-        allow(subject).to receive(:idp_metadata_url).and_return(idp_metadata_url)
-        allow(subject).to receive(:sp_entity_id).and_return(sp_entity_id)
-        allow(subject).to receive(:sp_metadata).and_return(sp_metadata)
-        allow(subject).to receive(:certificate).and_return(certificate)
-        allow(subject).to receive(:private_key).and_return(private_key)
-        allow(subject).to receive(:idp_slo_session_destroy).and_return(idp_slo_session_destroy)
-        allow(config).to receive(:extra).and_return(extra)
+        subject.config.idp_metadata_file = idp_metadata_file
+        subject.config.idp_metadata_url = idp_metadata_url
+        subject.config.sp_entity_id = sp_entity_id
+        subject.config.sp_metadata = sp_metadata
+        subject.config.certificate = certificate
+        subject.config.private_key = private_key
+        subject.config.idp_slo_session_destroy = idp_slo_session_destroy
+        subject.config.extra = extra
 
         expect(subject.omniauth_settings).to include(
           name: name,

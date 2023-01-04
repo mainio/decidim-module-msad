@@ -105,9 +105,7 @@ module OmniAuth
             idp_cert = File.read(file_fixture("idp.crt"))
             expect(instance.options[:idp_cert]).to eq(
               # Remove the comments and newlines from the cert
-              # rubocop:disable Performance/StringReplacement
               idp_cert.gsub(/-----[^\-]+-----/, "").gsub("\n", "")
-              # rubocop:enable Performance/StringReplacement
             )
           end
 
@@ -257,10 +255,7 @@ module OmniAuth
 
             saml_response = base64_file("#{xml}.xml")
 
-            post(
-              "/users/auth/msad/callback",
-              "SAMLResponse" => saml_response
-            )
+            post "/users/auth/msad/callback", **{ "SAMLResponse" => saml_response }
           end
 
           it "sets the info hash correctly" do
@@ -311,11 +306,13 @@ module OmniAuth
           let(:relay_state) { "/relay/uri" }
 
           before do
-            post "/users/auth/msad/slo", {
+            post "/users/auth/msad/slo", **{
               SAMLResponse: base64_file("saml_logout_response.xml"),
-              RelayState: relay_state
-            }, "rack.session" => {
-              "saml_transaction_id" => "_123456ab-1234-1a2b-cd3e-1a2b34567890"
+              RelayState: relay_state,
+              "rack.session" =>
+              {
+                "saml_transaction_id" => "_123456ab-1234-1a2b-cd3e-1a2b34567890"
+              }
             }
           end
 
@@ -381,13 +378,10 @@ module OmniAuth
 
         context "when request is a logout request" do
           subject do
-            post(
-              "/users/auth/msad/slo",
-              params,
-              "rack.session" => {
-                "saml_uid" => "mmeikalainen.onmicrosoft.com#EXT\#@example.onmicrosoft.com"
-              }
-            )
+            post "/users/auth/msad/slo", params,
+                 "rack.session" => {
+                   "saml_uid" => "mmeikalainen.onmicrosoft.com#EXT\#@example.onmicrosoft.com"
+                 }
           end
 
           let(:params) { { "SAMLRequest" => base64_file("saml_logout_request.xml") } }
@@ -429,9 +423,11 @@ module OmniAuth
         end
 
         context "when sp initiated SLO" do
-          let(:params) { nil }
+          let(:params) { {} }
 
-          before { post("/users/auth/msad/spslo", params) }
+          before do
+            post "/users/auth/msad/spslo", **params
+          end
 
           it "redirects to logout request" do
             expect(last_response).to be_redirect

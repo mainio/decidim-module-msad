@@ -16,7 +16,7 @@ module Decidim
 
       # For testing with signed in user
       let(:confirmed_user) do
-        create(:user, :confirmed, organization: organization)
+        create(:user, :confirmed, organization: organization, password: "SomeDummywords1234", password_confirmation: "SomeDummywords1234")
       end
 
       before do
@@ -325,7 +325,7 @@ module Decidim
 
         context "when another user is already identified with the same identity" do
           let(:another_user) do
-            create(:user, :confirmed, organization: organization)
+            create(:user, :confirmed, organization: organization, password: "SomeDummywords1234", password_confirmation: "SomeDummywords1234")
           end
 
           before do
@@ -372,7 +372,7 @@ module Decidim
 
         context "when another user is already authorized with the same identity" do
           let(:another_user) do
-            create(:user, :confirmed, organization: organization)
+            create(:user, :confirmed, organization: organization, password: "SomeDummywords1234", password_confirmation: "SomeDummywords1234")
           end
 
           before do

@@ -71,11 +71,6 @@ Rails/OutputSafety:
 Rails/Pluck:
   Enabled: false
 
-Rails/HttpPositionalArguments:
-  Include:
-    - "app/controllers/**"
-    - "spec/controllers/**"
-
 Rails/RakeEnvironment:
   Enabled: false
 
@@ -96,3 +91,9 @@ Rails/SkipsModelValidations:
 Rails/Validation:
   Include:
     - decidim-*/app/models/**/*.rb
+# This rule is added since the Omniauth strategy here, since rubocop asumes request methods are pointing to rails methods,
+# , and we are sending the requests to rack-test gem. These methods accept only
+# keyword arguments in rails, while they accept positional arguments rack-test gem.
+Rails/HttpPositionalArguments:
+  Exclude:
+    - spec/lib/omniauth/**/*.rb
