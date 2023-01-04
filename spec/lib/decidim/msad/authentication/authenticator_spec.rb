@@ -250,7 +250,7 @@ module Decidim
             expect(Decidim::Authorization.last.id).to eq(auth.id)
             expect(auth.user.id).to eq(user.id)
             expect(auth.unique_id).to eq(signature)
-            expect(auth.metadata).to be(nil)
+            expect(auth.metadata).to be_nil
           end
 
           context "when the metadata collector has been configured to collect attributes" do
@@ -318,7 +318,7 @@ module Decidim
               auth = subject.authorize_user!(user)
 
               expect(auth.id).to eq(authorization.id)
-              expect(auth.metadata).to be(nil)
+              expect(auth.metadata).to be_nil
             end
           end
 
@@ -363,7 +363,7 @@ module Decidim
           it "does not sign the user up to the newsletters" do
             subject.update_user!(user)
 
-            expect(user.newsletter_notifications_at).to be(nil)
+            expect(user.newsletter_notifications_at).to be_nil
           end
 
           context "when signing up new users to newsletters is enabled" do
@@ -383,7 +383,7 @@ module Decidim
             it "does not sign up existing users to the newsletters" do
               subject.update_user!(user)
 
-              expect(user.newsletter_notifications_at).to be(nil)
+              expect(user.newsletter_notifications_at).to be_nil
             end
           end
         end

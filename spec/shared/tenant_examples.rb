@@ -24,18 +24,20 @@ shared_examples "an MSAD tenant" do |name|
         config = double
         expect(config).to receive(:omniauth).with(
           name.to_sym,
-          name: name,
-          strategy_class: OmniAuth::Strategies::MSAD,
-          idp_metadata_file: metadata_file,
-          idp_metadata_url: metadata_url,
-          sp_entity_id: "https://localhost:3000/users/auth/#{name}/metadata",
-          sp_name_qualifier: "https://localhost:3000/users/auth/#{name}/metadata",
-          sp_metadata: [],
-          assertion_consumer_service_url: "https://localhost:3000/users/auth/#{name}/callback",
-          certificate: nil,
-          private_key: nil,
-          single_logout_service_url: "https://localhost:3000/users/auth/#{name}/slo",
-          idp_slo_session_destroy: instance_of(Proc)
+          {
+            name: name,
+            strategy_class: OmniAuth::Strategies::MSAD,
+            idp_metadata_file: metadata_file,
+            idp_metadata_url: metadata_url,
+            sp_entity_id: "https://localhost:3000/users/auth/#{name}/metadata",
+            sp_name_qualifier: "https://localhost:3000/users/auth/#{name}/metadata",
+            sp_metadata: [],
+            assertion_consumer_service_url: "https://localhost:3000/users/auth/#{name}/callback",
+            certificate: nil,
+            private_key: nil,
+            single_logout_service_url: "https://localhost:3000/users/auth/#{name}/slo",
+            idp_slo_session_destroy: instance_of(Proc)
+          }
         )
         block.call(config)
       end

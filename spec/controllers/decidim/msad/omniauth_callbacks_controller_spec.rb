@@ -56,8 +56,9 @@ module Decidim
         # Reset the metadata attributes back to defaults
         tenant.metadata_attributes = {}
 
-        # Reset the before_callback_phase for the other tests
-        OmniAuth.config.before_callback_phase {}
+        OmniAuth.config.before_callback_phase do
+          # Reset the before_callback_phase for the other tests
+        end
       end
 
       describe "GET msad" do
@@ -515,7 +516,7 @@ module Decidim
 
       def saml_response_from_file(file, sign: false)
         filepath = file_fixture(file)
-        file_io = IO.read(filepath)
+        file_io = File.read(filepath)
         doc = Nokogiri::XML::Document.parse(file_io)
 
         yield doc if block_given?
@@ -545,7 +546,7 @@ module Decidim
         end
         assertion_canon = noko.canonicalize(
           Nokogiri::XML::XML_C14N_EXCLUSIVE_1_0,
-          XMLSecurity::Document::INC_PREFIX_LIST.split(" ")
+          XMLSecurity::Document::INC_PREFIX_LIST.split
         )
 
         assertion_doc = XMLSecurity::Document.new(assertion_canon)

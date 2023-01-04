@@ -21,18 +21,16 @@ module Decidim
         attr_reader :tenant, :saml_attributes
 
         def collect
-          tenant.metadata_attributes.map do |key, defs|
-            value = begin
-              case defs
-              when Hash
-                saml_attributes.public_send(defs[:type], defs[:name])
-              when String
-                saml_attributes.single(defs)
-              end
-            end
+          tenant.metadata_attributes.to_h do |key, defs|
+            value = case defs
+                    when Hash
+                      saml_attributes.public_send(defs[:type], defs[:name])
+                    when String
+                      saml_attributes.single(defs)
+                    end
 
             [key, value]
-          end.to_h
+          end
         end
       end
     end

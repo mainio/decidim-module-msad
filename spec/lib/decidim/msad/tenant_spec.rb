@@ -9,7 +9,11 @@ module Decidim
       it_behaves_like "an MSAD tenant", "other"
 
       context "with default configuration" do
-        let(:subject) { described_class.new {} }
+        subject do
+          described_class.new do
+            # Add some text to avoid rubocop EmptyBlock
+          end
+        end
 
         describe "#name" do
           it "returns the default name when name is not configured" do

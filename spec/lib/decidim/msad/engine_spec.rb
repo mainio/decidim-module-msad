@@ -66,18 +66,20 @@ module Decidim
           config = double
           expect(config).to receive(:omniauth).with(
             :msad,
-            name: "msad",
-            strategy_class: OmniAuth::Strategies::MSAD,
-            idp_metadata_file: nil,
-            idp_metadata_url: "https://login.microsoftonline.com/987f6543-1e0d-12a3-45b6-789012c345de/federationmetadata/2007-06/federationmetadata.xml",
-            sp_entity_id: "http://1.lvh.me/users/auth/msad/metadata",
-            sp_name_qualifier: "http://1.lvh.me/users/auth/msad/metadata",
-            sp_metadata: [],
-            assertion_consumer_service_url: "https://localhost:3000/users/auth/msad/callback",
-            certificate: nil,
-            private_key: nil,
-            single_logout_service_url: "https://localhost:3000/users/auth/msad/slo",
-            idp_slo_session_destroy: instance_of(Proc)
+            {
+              name: "msad",
+              strategy_class: OmniAuth::Strategies::MSAD,
+              idp_metadata_file: nil,
+              idp_metadata_url: "https://login.microsoftonline.com/987f6543-1e0d-12a3-45b6-789012c345de/federationmetadata/2007-06/federationmetadata.xml",
+              sp_entity_id: "http://1.lvh.me/users/auth/msad/metadata",
+              sp_name_qualifier: "http://1.lvh.me/users/auth/msad/metadata",
+              sp_metadata: [],
+              assertion_consumer_service_url: "https://localhost:3000/users/auth/msad/callback",
+              certificate: nil,
+              private_key: nil,
+              single_logout_service_url: "https://localhost:3000/users/auth/msad/slo",
+              idp_slo_session_destroy: instance_of(Proc)
+            }
           )
           block.call(config)
         end
@@ -85,18 +87,20 @@ module Decidim
           config = double
           expect(config).to receive(:omniauth).with(
             :other,
-            name: "other",
-            strategy_class: OmniAuth::Strategies::MSAD,
-            idp_metadata_file: nil,
-            idp_metadata_url: "https://login.microsoftonline.com/876f5432-1e0d-12a3-45b6-789012c345de/federationmetadata/2007-06/federationmetadata.xml",
-            sp_entity_id: "http://2.lvh.me/users/auth/other/metadata",
-            sp_name_qualifier: "http://2.lvh.me/users/auth/other/metadata",
-            sp_metadata: [],
-            assertion_consumer_service_url: "https://localhost:3000/users/auth/other/callback",
-            certificate: nil,
-            private_key: nil,
-            single_logout_service_url: "https://localhost:3000/users/auth/other/slo",
-            idp_slo_session_destroy: instance_of(Proc)
+            {
+              name: "other",
+              strategy_class: OmniAuth::Strategies::MSAD,
+              idp_metadata_file: nil,
+              idp_metadata_url: "https://login.microsoftonline.com/876f5432-1e0d-12a3-45b6-789012c345de/federationmetadata/2007-06/federationmetadata.xml",
+              sp_entity_id: "http://2.lvh.me/users/auth/other/metadata",
+              sp_name_qualifier: "http://2.lvh.me/users/auth/other/metadata",
+              sp_metadata: [],
+              assertion_consumer_service_url: "https://localhost:3000/users/auth/other/callback",
+              certificate: nil,
+              private_key: nil,
+              single_logout_service_url: "https://localhost:3000/users/auth/other/slo",
+              idp_slo_session_destroy: instance_of(Proc)
+            }
           )
           block.call(config)
         end

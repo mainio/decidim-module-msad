@@ -6,6 +6,7 @@ module Decidim
       class Error < StandardError; end
 
       class AuthorizationBoundToOtherUserError < Error; end
+
       class IdentityBoundToOtherUserError < Error; end
 
       class ValidationError < Error

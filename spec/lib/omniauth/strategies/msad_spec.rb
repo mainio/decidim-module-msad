@@ -19,7 +19,7 @@ module OmniAuth
       include OmniAuth::Test::StrategyTestCase
 
       def base64_file(filename)
-        Base64.encode64(IO.read(file_fixture(filename)))
+        Base64.encode64(File.read(file_fixture(filename)))
       end
 
       let(:certgen) { OmniAuth::Msad::Test::CertificateGenerator.new }
