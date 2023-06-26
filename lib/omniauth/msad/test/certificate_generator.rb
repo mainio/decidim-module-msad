@@ -17,7 +17,7 @@ module OmniAuth
             cert = OpenSSL::X509::Certificate.new
             cert.subject = cert.issuer = OpenSSL::X509::Name.parse(subject)
             cert.not_before = Time.zone.now
-            cert.not_after = Time.zone.now + 365 * 24 * 60 * 60
+            cert.not_after = Time.zone.now + (365 * 24 * 60 * 60)
             cert.public_key = public_key
             cert.serial = 0x0
             cert.version = 2

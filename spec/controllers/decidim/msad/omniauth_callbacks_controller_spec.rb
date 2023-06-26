@@ -16,7 +16,7 @@ module Decidim
 
       # For testing with signed in user
       let(:confirmed_user) do
-        create(:user, :confirmed, organization: organization)
+        create(:user, :confirmed, organization: organization, password: "SomeDummywords1234", password_confirmation: "SomeDummywords1234")
       end
 
       before do
@@ -56,8 +56,9 @@ module Decidim
         # Reset the metadata attributes back to defaults
         tenant.metadata_attributes = {}
 
-        # Reset the before_callback_phase for the other tests
-        OmniAuth.config.before_callback_phase {}
+        OmniAuth.config.before_callback_phase do
+          # Reset the before_callback_phase for the other tests
+        end
       end
 
       describe "GET msad" do
@@ -325,7 +326,7 @@ module Decidim
 
         context "when another user is already identified with the same identity" do
           let(:another_user) do
-            create(:user, :confirmed, organization: organization)
+            create(:user, :confirmed, organization: organization, password: "SomeDummywords1234", password_confirmation: "SomeDummywords1234")
           end
 
           before do
@@ -372,7 +373,7 @@ module Decidim
 
         context "when another user is already authorized with the same identity" do
           let(:another_user) do
-            create(:user, :confirmed, organization: organization)
+            create(:user, :confirmed, organization: organization, password: "SomeDummywords1234", password_confirmation: "SomeDummywords1234")
           end
 
           before do
@@ -515,7 +516,7 @@ module Decidim
 
       def saml_response_from_file(file, sign: false)
         filepath = file_fixture(file)
-        file_io = IO.read(filepath)
+        file_io = File.read(filepath)
         doc = Nokogiri::XML::Document.parse(file_io)
 
         yield doc if block_given?
@@ -545,7 +546,7 @@ module Decidim
         end
         assertion_canon = noko.canonicalize(
           Nokogiri::XML::XML_C14N_EXCLUSIVE_1_0,
-          XMLSecurity::Document::INC_PREFIX_LIST.split(" ")
+          XMLSecurity::Document::INC_PREFIX_LIST.split
         )
 
         assertion_doc = XMLSecurity::Document.new(assertion_canon)

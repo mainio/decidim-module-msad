@@ -9,7 +9,7 @@ Gem::Specification.new do |spec|
   spec.version = Decidim::Msad::VERSION
   spec.authors = ["Antti Hukkanen"]
   spec.email = ["antti.hukkanen@mainiotech.fi"]
-  spec.required_ruby_version = ">= 2.7"
+  spec.required_ruby_version = ">= 3.0"
 
   spec.summary = "Provides possibility to bind Microsoft Active Directory (AD) authentication provider to Decidim."
   spec.description = "Adds Microsoft Active Directory (AD) authentication provider to Decidim."
@@ -29,4 +29,5 @@ Gem::Specification.new do |spec|
   spec.add_dependency "omniauth-saml", "~> 2.0"
 
   spec.add_development_dependency "decidim-dev", Decidim::Msad::DECIDIM_VERSION
+  spec.metadata["rubygems_mfa_required"] = "true"
 end

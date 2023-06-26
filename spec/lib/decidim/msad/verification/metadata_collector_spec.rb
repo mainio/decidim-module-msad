@@ -40,7 +40,7 @@ module Decidim
           end
 
           it "does not collect any metadata" do
-            expect(subject.metadata).to be(nil)
+            expect(subject.metadata).to be_nil
           end
         end
 

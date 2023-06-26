@@ -190,7 +190,7 @@ module Decidim
 
       def saml_response_from_file(file)
         filepath = file_fixture(file)
-        file_io = IO.read(filepath)
+        file_io = File.read(filepath)
         doc = Nokogiri::XML::Document.parse(file_io)
 
         yield doc if block_given?

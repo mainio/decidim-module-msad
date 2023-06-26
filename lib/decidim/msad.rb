@@ -63,6 +63,7 @@ module Decidim
     end
 
     class TenantNameTooSimilar < StandardError; end
+
     class InvalidTenantName < StandardError; end
   end
 end

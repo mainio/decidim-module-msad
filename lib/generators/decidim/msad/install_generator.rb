@@ -35,7 +35,8 @@ module Decidim
 
         def enable_authentication
           secrets_path = Rails.application.root.join("config", "secrets.yml")
-          secrets = YAML.safe_load(File.read(secrets_path), [], [], true)
+          evaluated_secrets = ERB.new(File.read(secrets_path))
+          secrets = YAML.safe_load(evaluated_secrets.result, [], [], true)
 
           if secrets["default"]["omniauth"]["msad"]
             say_status :identical, "config/secrets.yml", :blue
@@ -110,12 +111,12 @@ module Decidim
 
           def inject_msad_config
             @final += "    msad:\n"
-            case config_branch
-            when :development, :test
-              @final += "      enabled: true\n"
-            else
-              @final += "      enabled: false\n"
-            end
+            @final += case config_branch
+                      when :development, :test
+                        "      enabled: true\n"
+                      else
+                        "      enabled: false\n"
+                      end
             @final += "      metadata_url:\n"
             @final += "      icon: account-login\n"
           end

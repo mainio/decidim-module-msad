@@ -6,7 +6,7 @@ require "webmock"
 
 require "decidim/msad/test/runtime"
 
-require "simplecov" if ENV["SIMPLECOV"] || ENV["CODECOV"]
+require "simplecov" if ENV.fetch("SIMPLECOV", nil) || ENV.fetch("CODECOV", nil)
 if ENV["CODECOV"]
   require "codecov"
   SimpleCov.formatter = SimpleCov::Formatter::Codecov
@@ -80,5 +80,28 @@ RSpec.configure do |config|
       :get,
       "https://login.microsoftonline.com/987f6543-1e0d-12a3-45b6-789012c345de/federationmetadata/2007-06/federationmetadata.xml"
     ).to_return(status: 200, body: File.new(metadata_path), headers: {})
+  end
+end
+
+RSpec.configure do |config|
+  config.before do
+    # Re-define the password validators due to a bug in the "email included"
+    # check which does not work well for domains such as "1.lvh.me" that we are
+    # using during tests.
+    PasswordValidator.send(:remove_const, :VALIDATION_METHODS)
+    PasswordValidator.const_set(
+      :VALIDATION_METHODS,
+      [
+        :password_too_short?,
+        :password_too_long?,
+        :not_enough_unique_characters?,
+        :name_included_in_password?,
+        :nickname_included_in_password?,
+        # :email_included_in_password?,
+        :domain_included_in_password?,
+        :password_too_common?,
+        :blacklisted?
+      ].freeze
+    )
   end
 end

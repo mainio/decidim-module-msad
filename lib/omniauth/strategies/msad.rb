@@ -39,7 +39,7 @@ module OmniAuth
           attribute = find_attribute_by(values)
           [key, attribute]
         end
-        info_hash = Hash[found_attributes]
+        info_hash = found_attributes.to_h
 
         # The name attribute is overridden if the first name and last name are
         # defined because otherwise it could be the principal name which is not
