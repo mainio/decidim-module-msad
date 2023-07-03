@@ -19,7 +19,7 @@ en:
           create:
             success: You have been successfully authorized through Active Directory
           destroy:
-            success: Authorization sucessfully reset.
+            success: Authorization successfully reset.
           new:
             continue: Continue without waiting
             description: Please wait a moment, you will be redirected to the identification service...
