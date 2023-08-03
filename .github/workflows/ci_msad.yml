@@ -10,6 +10,7 @@ on:
 env:
   CI: "true"
   CODECOV: "true"
+  CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
 jobs:
   main:
@@ -45,7 +46,7 @@ jobs:
       - uses: nanasess/setup-chromedriver@v2
       - run: bundle exec rspec
         name: RSpec
-      - uses: codecov/codecov-action@v3
+      - uses: codecov/codecov-action@v3.1.4
       - uses: actions/upload-artifact@v3
         if: always()
         with:
