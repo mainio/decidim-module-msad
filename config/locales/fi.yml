@@ -1,22 +1,23 @@
+---
 fi:
   decidim:
     authorization_handlers:
       msad_identity:
-        explanation: Tunnista itsesi Active Directory -tunnistuspalvelun avulla.
-        name: Active Directory tunnistus
+        explanation: Tunnistaudu Active Directory -tunnistautumispalvelun avulla.
+        name: Active Directory tunnistautuminen
     msad:
       omniauth_callbacks:
         failure:
-          already_authorized: Toinen käyttäjä on tunnistanut itsensä jo samalla henkilöllisyydellä.
-          conditions: Tunnistuspyyntöä ei käsitelty sallitun aikarajan sisällä. Yritä uudestaan.
-          identity_bound_to_other_user: Toinen käyttäjä on jo tunnistanut itsensä tällä henkilöllisyydellä. Kirjaudu ulos ja kirjaudu uudestaan sisään käyttäen suoraan Active Directory -tunnistusta.
+          already_authorized: Toinen käyttäjä on tunnistautunut jo samalla henkilöllisyydellä.
+          conditions: Tunnistautumispyyntöä ei käsitelty sallitun aikarajan sisällä. Yritä uudestaan.
+          identity_bound_to_other_user: Toinen käyttäjä on jo tunnistautunut tällä henkilöllisyydellä. Kirjaudu ulos ja kirjaudu uudestaan sisään käyttäen suoraan Active Directory -tunnistautumista.
           invalid_data: Sinua ei voida tunnistaa Active Directoryn kautta.
-          session_expiration: Tunnistusistunto vanhentui. Yritä uudestaan.
-          success_status: Tunnistus epäonnistui tai peruutettiin. Yritä uudestaan.
+          session_expiration: Tunnistautumisistunto vanhentui. Yritä uudestaan.
+          success_status: Tunnistautuminen epäonnistui tai peruutettiin. Yritä uudestaan.
       verification:
         authorizations:
           create:
-            success: Sinut on onnistuneesti tunnistettu Active Directory -palvelun avulla
+            success: Tunnistautuminen Active Directory -palvelun avulla onnistui
           destroy:
             success: Varmennus tyhjennetty onnistuneesti.
           new:
@@ -28,4 +29,4 @@ fi:
         omniauth_settings:
           msad:
             metadata_file: Metadata-tiedosto
-            metadata_url: Metadatan osoite (URL)
+            metadata_url: Metadatan URL-osoite
