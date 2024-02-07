@@ -206,7 +206,7 @@ module OmniAuth
         # within the current website. This forces the relay state to always
         # start with a single forward slash character (/).
         return "/" unless state
-        return "/" unless state.match?(%r{^/[^/].*})
+        return "/" unless state.match?(%r{\A/[^/].*})
 
         state
       end
