@@ -21,9 +21,9 @@ cs:
           destroy:
             success: Autorizace byla úspěšně obnovena.
           new:
-            continue: Continue without waiting
-            description: Please wait a moment, you will be redirected to the identification service...
-            title: Redirection
+            continue: Pokračovat bez čekání
+            description: Počkejte prosím chvilku, budete přesměrováni na identifikační službu...
+            title: Přesměrování
     system:
       organizations:
         omniauth_settings:
