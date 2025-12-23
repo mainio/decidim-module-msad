@@ -9,6 +9,10 @@ def install_module(path)
     # Temporary fix to overcome the issue with sass-embedded, see:
     # https://github.com/decidim/decidim/pull/11074
     system("npm i sass-embedded@~1.62.0")
+
+    # Lock foundation-sites to an older version in order to support the legacy
+    # version.
+    system("npm i foundation-sites@~6.7.5")
   end
 end
 
