@@ -4,6 +4,13 @@
 [![codecov](https://codecov.io/gh/mainio/decidim-module-msad/branch/master/graph/badge.svg)](https://codecov.io/gh/mainio/decidim-module-msad)
 [![Crowdin](https://badges.crowdin.net/decidim-msad/localized.svg)](https://crowdin.com/project/decidim-msad)
 
+> [!IMPORTANT]
+> This repository is no longer be maintained. This module has been deprecated in
+> favor of a new
+> [Entra ID module](https://github.com/mainio/decidim-module-entraid). Please
+> use that module instead or migrate to that module in case you have been using
+> this module.
+
 ![Decidim MSAD](decidim-msad.png)
 
 A [Decidim](https://github.com/decidim/decidim) module to add Microsoft Active
